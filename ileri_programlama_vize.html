@@ -1,0 +1,1905 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>İleri Programlama I — Vize Özeti</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f1a;
+    --bg2: #131625;
+    --bg3: #1a1e32;
+    --card: #1e2236;
+    --card2: #252a42;
+    --border: rgba(255,255,255,0.08);
+    --border2: rgba(255,255,255,0.14);
+    --text: #e8eaf2;
+    --text2: #9ea4c0;
+    --text3: #6b718f;
+    --blue: #5b8dee;
+    --blue2: #3d6fd6;
+    --purple: #8b5cf6;
+    --purple2: #7c3aed;
+    --teal: #14b8a6;
+    --teal2: #0d9488;
+    --amber: #f59e0b;
+    --amber2: #d97706;
+    --coral: #f97316;
+    --green: #22c55e;
+    --pink: #ec4899;
+    --red: #ef4444;
+    --accent: #5b8dee;
+    --glow: rgba(91,141,238,0.15);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 15px;
+  }
+
+  /* HEADER */
+  .hero {
+    position: relative;
+    overflow: hidden;
+    padding: 72px 40px 56px;
+    text-align: center;
+    background: linear-gradient(160deg, #0d0f1a 0%, #111428 50%, #0d1225 100%);
+  }
+  .hero::before {
+    content:'';
+    position:absolute; inset:0;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(91,141,238,0.18) 0%, transparent 70%);
+    pointer-events:none;
+  }
+  .hero-grid {
+    position:absolute; inset:0;
+    background-image:
+      linear-gradient(rgba(91,141,238,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(91,141,238,0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+  .hero-badge {
+    display:inline-flex; align-items:center; gap:8px;
+    background: rgba(91,141,238,0.12);
+    border: 1px solid rgba(91,141,238,0.3);
+    border-radius:100px;
+    padding: 6px 18px;
+    font-size:12px; font-family:'JetBrains Mono',monospace;
+    color: var(--blue);
+    margin-bottom:24px;
+    letter-spacing:0.05em;
+  }
+  .hero h1 {
+    font-family:'Syne',sans-serif;
+    font-size: clamp(32px, 5vw, 52px);
+    font-weight:800;
+    letter-spacing:-0.02em;
+    line-height:1.1;
+    background: linear-gradient(135deg, #e8eaf2 30%, #7ba3f5 100%);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    background-clip:text;
+    margin-bottom:16px;
+  }
+  .hero p {
+    color: var(--text2);
+    font-size:16px;
+    max-width:520px;
+    margin: 0 auto 32px;
+  }
+  .hero-stats {
+    display:flex; justify-content:center; gap:32px; flex-wrap:wrap;
+  }
+  .stat {
+    text-align:center;
+  }
+  .stat-num {
+    font-family:'Syne',sans-serif;
+    font-size:28px; font-weight:800;
+    color: var(--blue);
+  }
+  .stat-label { font-size:12px; color: var(--text3); text-transform:uppercase; letter-spacing:0.1em; }
+
+  /* NAV */
+  nav {
+    position: sticky; top:0; z-index:100;
+    background: rgba(13,15,26,0.9);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 40px;
+  }
+  .nav-inner {
+    display:flex; gap:4px; overflow-x:auto;
+    scrollbar-width:none;
+    max-width:1100px; margin:0 auto;
+  }
+  .nav-inner::-webkit-scrollbar { display:none; }
+  .nav-btn {
+    flex-shrink:0;
+    background:none; border:none; cursor:pointer;
+    font-family:'Nunito',sans-serif;
+    font-size:13px; font-weight:600;
+    color: var(--text3);
+    padding: 14px 16px;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    white-space:nowrap;
+  }
+  .nav-btn:hover { color: var(--text); }
+  .nav-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+  /* LAYOUT */
+  .container { max-width:1100px; margin:0 auto; padding:48px 32px; }
+
+  /* SECTION */
+  .section { display:none; animation: fadeIn 0.3s ease; }
+  .section.active { display:block; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
+
+  .section-header {
+    display:flex; align-items:center; gap:16px;
+    margin-bottom:36px;
+  }
+  .section-icon {
+    width:48px; height:48px; border-radius:14px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:22px;
+    flex-shrink:0;
+  }
+  .section-header h2 {
+    font-family:'Syne',sans-serif;
+    font-size:26px; font-weight:800;
+    letter-spacing:-0.01em;
+  }
+  .section-header span {
+    display:block; font-size:13px; color:var(--text3); margin-top:2px;
+  }
+
+  /* GRID */
+  .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  .grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  @media(max-width:768px) { .grid-2,.grid-3 { grid-template-columns:1fr; } }
+
+  /* CARD */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius:16px;
+    padding:24px;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .card:hover { border-color: var(--border2); transform: translateY(-2px); }
+  .card-title {
+    font-family:'Syne',sans-serif;
+    font-size:15px; font-weight:700;
+    margin-bottom:14px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .card-title .dot {
+    width:8px; height:8px; border-radius:50%;
+    flex-shrink:0;
+  }
+
+  /* TABLE */
+  table {
+    width:100%; border-collapse:collapse;
+    margin: 12px 0;
+    font-size:14px;
+  }
+  th {
+    background: var(--bg3);
+    color: var(--text2);
+    font-size:11px; font-weight:700;
+    text-transform:uppercase; letter-spacing:0.08em;
+    padding: 10px 14px; text-align:left;
+    border-bottom: 1px solid var(--border2);
+  }
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align:top;
+  }
+  tr:last-child td { border-bottom:none; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+
+  /* CODE */
+  code {
+    font-family:'JetBrains Mono',monospace;
+    font-size:13px;
+    background: rgba(91,141,238,0.1);
+    border: 1px solid rgba(91,141,238,0.2);
+    border-radius:5px;
+    padding: 1px 7px;
+    color: #93b8ff;
+  }
+  pre {
+    background: #0a0c18;
+    border: 1px solid var(--border2);
+    border-radius:12px;
+    padding:20px 24px;
+    overflow-x:auto;
+    margin: 14px 0;
+    font-family:'JetBrains Mono',monospace;
+    font-size:13px;
+    line-height:1.8;
+    color: #c9d1f5;
+  }
+  .kw { color:#a78bfa; }
+  .str { color:#86efac; }
+  .num { color:#fbbf24; }
+  .cm { color:#4b5563; font-style:italic; }
+  .type { color:#60a5fa; }
+  .fn { color:#f0abfc; }
+
+  /* BADGES */
+  .badge {
+    display:inline-block;
+    padding:3px 10px; border-radius:100px;
+    font-size:11px; font-weight:700;
+    text-transform:uppercase; letter-spacing:0.06em;
+  }
+  .badge-blue { background:rgba(91,141,238,0.15); color:var(--blue); border:1px solid rgba(91,141,238,0.3); }
+  .badge-purple { background:rgba(139,92,246,0.15); color:var(--purple); border:1px solid rgba(139,92,246,0.3); }
+  .badge-teal { background:rgba(20,184,166,0.15); color:var(--teal); border:1px solid rgba(20,184,166,0.3); }
+  .badge-amber { background:rgba(245,158,11,0.15); color:var(--amber); border:1px solid rgba(245,158,11,0.3); }
+  .badge-coral { background:rgba(249,115,22,0.15); color:var(--coral); border:1px solid rgba(249,115,22,0.3); }
+  .badge-green { background:rgba(34,197,94,0.15); color:var(--green); border:1px solid rgba(34,197,94,0.3); }
+  .badge-pink { background:rgba(236,72,153,0.15); color:var(--pink); border:1px solid rgba(236,72,153,0.3); }
+  .badge-red { background:rgba(239,68,68,0.15); color:var(--red); border:1px solid rgba(239,68,68,0.3); }
+
+  /* ALERT */
+  .alert {
+    border-radius:12px;
+    padding:16px 20px;
+    margin:16px 0;
+    display:flex; gap:12px;
+    font-size:14px;
+  }
+  .alert-warn {
+    background:rgba(245,158,11,0.08);
+    border:1px solid rgba(245,158,11,0.25);
+    color: #fde68a;
+  }
+  .alert-info {
+    background:rgba(91,141,238,0.08);
+    border:1px solid rgba(91,141,238,0.25);
+    color: #bfdbfe;
+  }
+  .alert-icon { font-size:18px; flex-shrink:0; margin-top:1px; }
+
+  /* LIST */
+  ul.fancy { list-style:none; padding:0; }
+  ul.fancy li {
+    padding: 8px 0 8px 24px;
+    position:relative;
+    border-bottom:1px solid var(--border);
+    font-size:14px;
+    color: var(--text2);
+  }
+  ul.fancy li:last-child { border-bottom:none; }
+  ul.fancy li::before {
+    content:'▸';
+    position:absolute; left:0;
+    color: var(--blue);
+  }
+
+  /* STEP */
+  .steps { display:flex; flex-direction:column; gap:12px; }
+  .step {
+    display:flex; gap:16px; align-items:flex-start;
+  }
+  .step-num {
+    width:32px; height:32px; border-radius:50%;
+    background: linear-gradient(135deg, var(--blue2), var(--purple2));
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Syne',sans-serif; font-size:13px; font-weight:800;
+    color:#fff; flex-shrink:0;
+    box-shadow:0 0 16px rgba(91,141,238,0.3);
+  }
+  .step-body { padding-top:5px; }
+  .step-body strong { font-weight:700; color:var(--text); display:block; margin-bottom:2px; }
+  .step-body p { font-size:13px; color:var(--text2); }
+
+  /* NYP CARDS */
+  .nyp-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; }
+  @media(max-width:600px){ .nyp-grid { grid-template-columns:1fr; } }
+  .nyp-card {
+    border-radius:14px; padding:20px;
+    border:1px solid var(--border);
+    transition: transform 0.2s, border-color 0.2s;
+  }
+  .nyp-card:hover { transform:translateY(-3px); border-color: var(--border2); }
+  .nyp-card h4 {
+    font-family:'Syne',sans-serif; font-size:15px; font-weight:800;
+    margin-bottom:6px;
+  }
+  .nyp-card p { font-size:13px; color:var(--text2); }
+  .nyp-card .tag { font-size:11px; margin-bottom:8px; }
+
+  /* OPERATOR TABLE */
+  .op-grid {
+    display:grid; grid-template-columns:repeat(auto-fill, minmax(280px,1fr));
+    gap:12px; margin:12px 0;
+  }
+  .op-item {
+    background:var(--bg3); border-radius:10px; padding:12px 16px;
+    border:1px solid var(--border);
+    display:flex; align-items:center; gap:12px;
+  }
+  .op-sym {
+    font-family:'JetBrains Mono',monospace;
+    font-size:18px; font-weight:500;
+    color: var(--amber);
+    min-width:36px; text-align:center;
+  }
+  .op-desc { font-size:13px; color:var(--text2); }
+  .op-desc strong { color:var(--text); }
+
+  /* PRIORITY */
+  .priority-list { display:flex; flex-direction:column; gap:6px; margin:12px 0; }
+  .priority-item {
+    display:flex; align-items:center; gap:12px;
+    background:var(--bg3); border-radius:8px; padding:10px 16px;
+    border:1px solid var(--border);
+  }
+  .priority-num {
+    font-family:'JetBrains Mono',monospace; font-size:11px;
+    color:var(--text3); min-width:20px;
+  }
+  .priority-ops {
+    font-family:'JetBrains Mono',monospace; font-size:14px;
+    color:var(--amber); flex:1;
+  }
+  .priority-label { font-size:12px; color:var(--text3); }
+
+  /* COLLECTION CARDS */
+  .coll-card {
+    border-radius:12px; padding:18px;
+    border:1px solid var(--border);
+    background:var(--card);
+  }
+  .coll-card h4 { font-family:'Syne',sans-serif; font-size:14px; font-weight:800; margin-bottom:8px; }
+  .coll-card .type-badge { margin-bottom:10px; }
+  .coll-card p { font-size:13px; color:var(--text2); margin-bottom:8px; }
+  .coll-meta { font-size:12px; color:var(--text3); }
+
+  /* STRING METHODS */
+  .method-list { display:flex; flex-direction:column; gap:6px; }
+  .method-item {
+    display:flex; gap:12px; align-items:flex-start;
+    padding:10px 14px;
+    background:var(--bg3); border-radius:8px;
+    border:1px solid var(--border);
+    font-size:13px;
+  }
+  .method-name {
+    font-family:'JetBrains Mono',monospace;
+    color: #f0abfc; min-width:180px; flex-shrink:0;
+    font-size:12px;
+  }
+  .method-desc { color:var(--text2); }
+
+  /* WARNING BOXES */
+  .warn-box {
+    background: rgba(239,68,68,0.07);
+    border:1px solid rgba(239,68,68,0.25);
+    border-radius:12px; padding:16px 20px;
+    margin:12px 0;
+  }
+  .warn-box-title {
+    font-family:'Syne',sans-serif; font-size:13px; font-weight:800;
+    color:var(--red); margin-bottom:10px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .warn-box ul { list-style:none; padding:0; }
+  .warn-box li {
+    padding:5px 0 5px 20px; position:relative;
+    font-size:13px; color:#fca5a5;
+    border-bottom:1px solid rgba(239,68,68,0.1);
+  }
+  .warn-box li:last-child { border-bottom:none; }
+  .warn-box li::before { content:'✕'; position:absolute; left:0; color:var(--red); font-size:11px; top:7px; }
+
+  /* DIVIDER */
+  .divider { height:1px; background:var(--border); margin:28px 0; }
+
+  h3 {
+    font-family:'Syne',sans-serif; font-size:17px; font-weight:800;
+    color:var(--text); margin:24px 0 14px;
+  }
+  p { color:var(--text2); margin-bottom:12px; font-size:14px; }
+  strong { color:var(--text); }
+
+  /* Flowchart in SVG */
+  .flow-wrap { overflow-x:auto; padding:8px 0; }
+
+  /* QUIZ */
+  .quiz-section { margin-top:32px; }
+  .quiz-title {
+    font-family:'Syne',sans-serif; font-size:20px; font-weight:800;
+    margin-bottom:20px; display:flex; align-items:center; gap:10px;
+  }
+  .quiz-card {
+    background:var(--card); border:1px solid var(--border);
+    border-radius:14px; padding:22px; margin-bottom:16px;
+  }
+  .quiz-q {
+    font-size:14px; font-weight:600; margin-bottom:14px;
+    color:var(--text);
+  }
+  .quiz-opts { display:flex; flex-direction:column; gap:8px; }
+  .quiz-opt {
+    display:flex; align-items:center; gap:10px;
+    padding:10px 16px; border-radius:8px;
+    border:1px solid var(--border);
+    cursor:pointer; font-size:13px;
+    color:var(--text2); background:var(--bg3);
+    transition: all 0.15s;
+    user-select:none;
+  }
+  .quiz-opt:hover { border-color:var(--border2); color:var(--text); }
+  .quiz-opt.correct { background:rgba(34,197,94,0.12); border-color:rgba(34,197,94,0.4); color:#86efac; }
+  .quiz-opt.wrong { background:rgba(239,68,68,0.1); border-color:rgba(239,68,68,0.3); color:#fca5a5; }
+  .quiz-opt.disabled { cursor:default; pointer-events:none; }
+  .quiz-feedback {
+    margin-top:12px; padding:10px 14px; border-radius:8px;
+    font-size:13px; display:none;
+  }
+  .quiz-feedback.show { display:block; }
+  .quiz-feedback.ok { background:rgba(34,197,94,0.1); color:#86efac; border:1px solid rgba(34,197,94,0.3); }
+  .quiz-feedback.fail { background:rgba(239,68,68,0.1); color:#fca5a5; border:1px solid rgba(239,68,68,0.3); }
+  .score-bar {
+    background:var(--card); border:1px solid var(--border);
+    border-radius:12px; padding:18px 24px;
+    display:flex; align-items:center; gap:20px;
+    margin-bottom:24px;
+  }
+  .score-num { font-family:'Syne',sans-serif; font-size:32px; font-weight:800; color:var(--green); }
+  .score-label { font-size:13px; color:var(--text3); }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-grid"></div>
+  <div style="position:relative;">
+    <div class="hero-badge">📚 Bilgisayar Programcılığı · 1. Yarıyıl</div>
+    <h1>İleri Programlama I<br>Vize Çalışma Rehberi</h1>
+    <p>4 bölümün eksiksiz özeti — algoritma, C# temelleri, OOP ve program yapısı</p>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">4</div><div class="stat-label">Bölüm</div></div>
+      <div class="stat"><div class="stat-num">110</div><div class="stat-label">Sayfa</div></div>
+      <div class="stat"><div class="stat-num">40+</div><div class="stat-label">Konu Başlığı</div></div>
+      <div class="stat"><div class="stat-num">20</div><div class="stat-label">Quiz Sorusu</div></div>
+    </div>
+  </div>
+</div>
+
+<nav>
+  <div class="nav-inner">
+    <button class="nav-btn active" onclick="show('b1',this)">📐 Bölüm 1: Algoritma</button>
+    <button class="nav-btn" onclick="show('b2',this)">💻 Bölüm 2: C# & .NET</button>
+    <button class="nav-btn" onclick="show('b3',this)">🔤 Bölüm 3: Temel Kavramlar</button>
+    <button class="nav-btn" onclick="show('b4',this)">🏗️ Bölüm 4: Program Yapısı</button>
+    <button class="nav-btn" onclick="show('quiz',this)">🎯 Mini Quiz</button>
+    <button class="nav-btn" onclick="show('analiz',this)">📊 Sınav Analizi</button>
+  </div>
+</nav>
+
+<!-- ===================== BÖLÜM 1 ===================== -->
+<div id="b1" class="section active">
+<div class="container">
+  <div class="section-header">
+    <div class="section-icon" style="background:linear-gradient(135deg,#3d6fd6,#5b8dee);">📐</div>
+    <div>
+      <h2>Algoritma ve Programlamaya Giriş</h2>
+      <span>Algoritma · Akış Diyagramı · Sözde Kod · Yazılım Geliştirme Süreci</span>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title"><div class="dot" style="background:var(--blue)"></div>Algoritma Nedir?</div>
+      <p>Adını <strong>El-Hârizmî</strong>'den alan algoritma; belirli bir problemi çözmek için izlenen <strong>sıralı, sonlu, açık ve mantıksal adımlar dizisidir.</strong></p>
+      <ul class="fancy">
+        <li>Her adım <strong>net ve anlaşılır</strong> olmalı</li>
+        <li>İşlem <strong>sırası</strong> korunmalı</li>
+        <li>Tüm <strong>olası durumları</strong> kapsamalı</li>
+        <li><strong>Başlangıç ve bitiş</strong> noktaları olmalı</li>
+        <li><strong>Sonlu</strong> sayıda adım içermeli</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title"><div class="dot" style="background:var(--green)"></div>Algoritmanın Önemi</div>
+      <ul class="fancy">
+        <li>Takım çalışmasını <strong>kolaylaştırır</strong></li>
+        <li>Projeyi tasarlayan dışında kişi tarafından da <strong>kodlanabilir</strong></li>
+        <li>Kodlama öncesi <strong>mantık hatalarını</strong> tespit eder</li>
+        <li>Günlük hayatın her alanında kullanılır</li>
+        <li>Karmaşık süreçleri basit adımlara indirger</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Problem Çözme Aşamaları</h3>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div class="step-body"><strong>Problemi Tanımlama (İnceleme, Analiz)</strong><p>Problem ne kadar iyi anlaşılırsa algoritma o kadar kolay geliştirilir.</p></div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body"><strong>Girdi ve Çıktıların Belirlenmesi</strong><p>Sistemin başlangıç ve bitiş noktaları, parametre giriş/çıkışları netleştirilir.</p></div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body"><strong>Alternatif Çözüm Yolları</strong><p>Bir problemin birden fazla çözümü vardır; zamana ve kaynağa göre en uygun seçilir.</p></div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-body"><strong>Çözümün Sınanması ve İyileştirilmesi</strong><p>Kodlamadan önce algoritma adım adım test edilir, mantık hataları giderilir.</p></div></div>
+    <div class="step"><div class="step-num">5</div><div class="step-body"><strong>Algoritmanın Kodlanması</strong><p>Uygun programlama dili seçilerek algoritma koda dönüştürülür.</p></div></div>
+    <div class="step"><div class="step-num">6</div><div class="step-body"><strong>Kodun Sınanması ve İyileştirilmesi</strong><p>Belirlenen girdiler için doğru çıktılar alınıp alınmadığı test edilir.</p></div></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3>Akış Diyagramı Şekilleri</h3>
+  <table>
+    <tr><th>Şekil Adı</th><th>Kullanım Amacı</th><th>Örnek</th></tr>
+    <tr><td><strong>Başla / Bitir</strong> (yuvarlak köşeli)</td><td>Algoritmanın başlangıç ve bitiş noktası</td><td>Her akışın ilk ve son elemanı</td></tr>
+    <tr><td><strong>İşlem / Atama</strong> (dikdörtgen)</td><td>Matematik işlemleri, değişken atamaları</td><td><code>Toplam = A + B</code></td></tr>
+    <tr><td><strong>Girdi / Çıktı</strong> (paralelkenar)</td><td>Klavye, ekran gibi G/Ç işlemleri</td><td>Sayıyı oku, ekrana yaz</td></tr>
+    <tr><td><strong>Karar</strong> (baklava/eşkenar dörtgen)</td><td>E/H dallanmaları, koşul kontrolü</td><td><code>Sayı > 0?</code></td></tr>
+    <tr><td><strong>Döngü</strong> (altıgen)</td><td>Tekrarlı işlemler</td><td>1'den N'e kadar say</td></tr>
+    <tr><td><strong>Akış Yönü</strong> (ok)</td><td>Adımlar arası bağlantı ve yön</td><td>→ ↓ ↑ ←</td></tr>
+  </table>
+
+  <div class="grid-3" style="margin-top:20px;">
+    <div class="card">
+      <div class="card-title"><div class="dot" style="background:var(--teal)"></div>Doğrusal Akış</div>
+      <p>Koşul veya döngü yok, sıralı işlemler.</p>
+      <ul class="fancy">
+        <li>İki sayının çarpımı</li>
+        <li>Çemberin alanı</li>
+        <li>Sınıf ortalaması</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title"><div class="dot" style="background:var(--purple)"></div>Mantıksal (Koşullu)</div>
+      <p>If-else dallanmaları mevcut.</p>
+      <ul class="fancy">
+        <li>Büyük sayıyı bulma</li>
+        <li>3 sayının en küçüğü</li>
+        <li>Tek-çift kontrolü</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title"><div class="dot" style="background:var(--coral)"></div>Döngüsel (Tekrarlı)</div>
+      <p>Koşula bağlı tekrar eden adımlar.</p>
+      <ul class="fancy">
+        <li>Faktöriyel hesaplama</li>
+        <li>1'den N'e topla</li>
+        <li>Kelimeyi 100 kez yaz</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3>Sözde Kod (Pseudo Code)</h3>
+  <div class="alert alert-info">
+    <div class="alert-icon">ℹ️</div>
+    <div>Algoritma ile kodlama arasındaki <strong>ara formdur.</strong> Yarı programlama, yarı konuşma dili. Evrensel olduğu için genellikle İngilizce kullanılır. Sözdizimi (syntax) kuralı yoktur.</div>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <table>
+        <tr><th>Komut</th><th>Anlamı</th></tr>
+        <tr><td><code>BAŞLA / BİTİR</code></td><td>Programın sınırları</td></tr>
+        <tr><td><code>OKU / INPUT</code></td><td>Kullanıcıdan veri al</td></tr>
+        <tr><td><code>YAZ / PRINT</code></td><td>Ekrana yazdır</td></tr>
+        <tr><td><code>EĞER … İSE</code></td><td>Koşul kontrolü</td></tr>
+        <tr><td><code>DEĞİLSE EĞER</code></td><td>else if karşılığı</td></tr>
+        <tr><td><code>DÖNGÜ X TO Y STEP Z</code></td><td>Sayaçlı for döngüsü</td></tr>
+        <tr><td><code>WHILE … ENDWHILE</code></td><td>Koşullu döngü</td></tr>
+      </table>
+    </div>
+    <div>
+      <pre><span class="kw">BAŞLA</span>
+  <span class="cm">// 2 sayının toplamı, çarpımı, ortalaması</span>
+  <span class="kw">OKU</span> sayi1
+  <span class="kw">OKU</span> sayi2
+  toplam &lt;- sayi1 + sayi2
+  carpim &lt;- sayi1 * sayi2
+  ortalama &lt;- toplam / <span class="num">2</span>
+  <span class="kw">PRINT</span> toplam, carpim, ortalama
+<span class="kw">BİTİR</span></pre>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3>Yazılım Geliştirme Süreci</h3>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div class="step-body"><strong>Taleplerin Belirlenmesi</strong><p>En kritik adım. Hatalı analiz tüm süreci etkiler. İş akış diyagramları ile desteklenir.</p></div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body"><strong>Planlama ve Analiz</strong><p>Modüllerin detaylandırılması, dil/mimari seçimi. "Ne yapılacak" odaklı, "nasıl yapılacak" değil.</p></div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body"><strong>Tasarım</strong><p>UI tasarımı, veri tabanı şemaları, UML diyagramları. Tüm teknik detaylar burada belirlenir.</p></div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-body"><strong>Kodlama</strong><p>Tasarım dokümanlarına göre yazılım geliştirilir. Kod yazım standartlarına uyulur.</p></div></div>
+    <div class="step"><div class="step-num">5</div><div class="step-body"><strong>Test ve Entegrasyon</strong><p>Birim testler, sistem testleri ve son aşamada müşteri kabul testi yapılır.</p></div></div>
+    <div class="step"><div class="step-num">6</div><div class="step-body"><strong>Bakım</strong><p>Operasyon sırasında oluşan hataların kalıcı çözümü. Proje büyüklüğüne göre şekillenir.</p></div></div>
+  </div>
+
+  <div class="warn-box">
+    <div class="warn-box-title">⚠️ Sınav Tuzakları — Bölüm 1</div>
+    <ul>
+      <li><strong>Güncelleme</strong> yazılım geliştirme sürecinin resmi bir aşaması DEĞİLDİR → Doğrusu: Bakım</li>
+      <li>Algoritmanın içinde <strong>mutlaka</strong> bir kontrol mekanizması olması gerekmez (doğrusal akışta yok)</li>
+      <li>Akış diyagramı türü olan <strong>Şekilsel</strong> diye bir kavram yoktur → Doğrusu: Doğrusal, Mantıksal, Döngüsel</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<!-- ===================== BÖLÜM 2 ===================== -->
+<div id="b2" class="section">
+<div class="container">
+  <div class="section-header">
+    <div class="section-icon" style="background:linear-gradient(135deg,#7c3aed,#a78bfa);">💻</div>
+    <div>
+      <h2>.NET Core ve C# Programlama Dili</h2>
+      <span>Program Türleri · Programlama Dilleri · OOP · C# & .NET Platformu</span>
+    </div>
+  </div>
+
+  <h3>Program Türleri</h3>
+  <div class="grid-3">
+    <div class="card">
+      <div class="card-title"><div class="dot" style="background:var(--blue)"></div>Sistem Yazılımları</div>
+      <p>Donanım ve diğer yazılımlar arası iletişimi sağlar.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;">
+        <span class="badge badge-blue">Linux</span>
+        <span class="badge badge-blue">Windows</span>
+        <span class="badge badge-blue">Android</span>
+        <span class="badge badge-blue">iOS</span>
+        <span class="badge badge-blue">macOS</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><div class="dot" style="background:var(--purple)"></div>Uygulama Yazılımları</div>
+      <p>Ticari, eğlence ve genel amaçlı yazılımlar.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;">
+        <span class="badge badge-purple">Oyunlar</span>
+        <span class="badge badge-purple">Antivirüs</span>
+        <span class="badge badge-purple">Office</span>
+        <span class="badge badge-purple">ERP</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><div class="dot" style="background:var(--teal)"></div>Programlama Dilleri</div>
+      <p>Diğer tüm yazılımların yapıldığı araçlar.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;">
+        <span class="badge badge-teal">C#</span>
+        <span class="badge badge-teal">Java</span>
+        <span class="badge badge-teal">Python</span>
+        <span class="badge badge-teal">C++</span>
+      </div>
+    </div>
+  </div>
+
+  <h3>Kullanım Hakkına Göre Yazılımlar</h3>
+  <table>
+    <tr><th>Tür</th><th>Açıklama</th><th>Örnek</th></tr>
+    <tr><td><span class="badge badge-amber">Lisanslı</span></td><td>Ücret karşılığı kullanım hakkı</td><td>Windows, MS Office, Photoshop</td></tr>
+    <tr><td><span class="badge badge-green">Ücretsiz</span></td><td>Sınırsız ücretsiz kullanım</td><td>Linux, MySQL, VLC</td></tr>
+    <tr><td><span class="badge badge-coral">Beta</span></td><td>Test amaçlı, kısıtlı kitleye, dönüt beklenerek</td><td>Yeni işletim sistemi testleri</td></tr>
+    <tr><td><span class="badge badge-blue">Açık Kaynak</span></td><td>Kaynak kodu herkese açık</td><td>WordPress, LibreOffice</td></tr>
+    <tr><td><span class="badge badge-pink">Kapalı Kaynak</span></td><td>Kaynak kodu gizli, genelde lisanslı</td><td>Windows 10, Apple OS X</td></tr>
+  </table>
+
+  <div class="divider"></div>
+
+  <h3>Programlama Dili Seviyeleri</h3>
+  <div style="display:flex;flex-direction:column;gap:8px;margin:12px 0;">
+    <div style="background:linear-gradient(90deg,rgba(91,141,238,0.15),transparent);border-left:3px solid var(--blue);padding:10px 16px;border-radius:0 8px 8px 0;"><strong style="color:var(--blue)">Çok Yüksek Seviyeli</strong> <span style="color:var(--text2);font-size:13px">— C#, Java, Visual Basic (insana en yakın, öğrenmesi en kolay)</span></div>
+    <div style="background:linear-gradient(90deg,rgba(139,92,246,0.12),transparent);border-left:3px solid var(--purple);padding:10px 16px;border-radius:0 8px 8px 0;"><strong style="color:var(--purple)">Yüksek Seviyeli</strong> <span style="color:var(--text2);font-size:13px">— Pascal, Fortran, COBOL, Basic</span></div>
+    <div style="background:linear-gradient(90deg,rgba(245,158,11,0.12),transparent);border-left:3px solid var(--amber);padding:10px 16px;border-radius:0 8px 8px 0;"><strong style="color:var(--amber)">Orta Seviyeli</strong> <span style="color:var(--text2);font-size:13px">— C (hem yüksek hem alçak özellikler taşır)</span></div>
+    <div style="background:linear-gradient(90deg,rgba(249,115,22,0.12),transparent);border-left:3px solid var(--coral);padding:10px 16px;border-radius:0 8px 8px 0;"><strong style="color:var(--coral)">Alçak Seviyeli</strong> <span style="color:var(--text2);font-size:13px">— Assembly (semboller ile hafıza/işlem operasyonları)</span></div>
+    <div style="background:linear-gradient(90deg,rgba(239,68,68,0.12),transparent);border-left:3px solid var(--red);padding:10px 16px;border-radius:0 8px 8px 0;"><strong style="color:var(--red)">Makine Dili</strong> <span style="color:var(--text2);font-size:13px">— Yalnızca 0 ve 1'lerden oluşur (bilgisayara en yakın)</span></div>
+  </div>
+
+  <div class="grid-2" style="margin-top:20px;">
+    <div class="card">
+      <div class="card-title"><div class="dot" style="background:var(--teal)"></div>Derleyici (Compiler)</div>
+      <p>Tüm kaynak kodu makine diline çevirir. Hata varsa <strong>çalıştırmaz</strong>, tüm hataları bildirir. Hedef kod oluşturulurken optimizasyon yapılır (kullanılmayan değişkenler temizlenir).</p>
+      <pre style="font-size:12px;"><span class="type">Kaynak Kod</span> → <span class="fn">Derleyici</span> → <span class="str">Hedef Kod</span></pre>
+    </div>
+    <div class="card">
+      <div class="card-title"><div class="dot" style="background:var(--purple)"></div>Yorumlayıcı (Interpreter)</div>
+      <p>Kodu <strong>satır satır</strong> veya blok blok çalıştırır. Çalışmayan bloktaki hata hiç görülmeyebilir. Derleme aşaması yoktur.</p>
+      <div class="alert alert-warn" style="margin-top:12px;">
+        <div class="alert-icon">⚠️</div>
+        <div style="font-size:13px;">Çalıştırılmayan bir kod bloğundaki hata <strong>asla</strong> görülmeyebilir!</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3>Nesne Yönelimli Programlama — 4 Temel Özellik</h3>
+  <div class="nyp-grid">
+    <div class="nyp-card" style="background:rgba(91,141,238,0.07);border-color:rgba(91,141,238,0.2);">
+      <div class="tag"><span class="badge badge-blue">Kapsülleme</span></div>
+      <h4 style="color:var(--blue)">Encapsulation</h4>
+      <p>Sınıf özelliklerini ve metotlarını dış erişime karşı koruma altına almak. Erişim belirteçleri: <code>public</code>, <code>private</code>, <code>protected</code></p>
+      <p style="margin-top:8px;"><strong>En güvensiz:</strong> public &nbsp;|&nbsp; <strong>En güvenli:</strong> private</p>
+    </div>
+    <div class="nyp-card" style="background:rgba(139,92,246,0.07);border-color:rgba(139,92,246,0.2);">
+      <div class="tag"><span class="badge badge-purple">Miras Alma</span></div>
+      <h4 style="color:var(--purple)">Inheritance</h4>
+      <p>Alt sınıfın üst sınıfın tüm özellik ve metotlarını devralması. Var olan sınıf üzerine yeni sınıflar oluşturulabilir.</p>
+      <p style="margin-top:8px;"><strong>Örnek:</strong> Motorlu Taşıtlar → Araba, Motosiklet</p>
+    </div>
+    <div class="nyp-card" style="background:rgba(20,184,166,0.07);border-color:rgba(20,184,166,0.2);">
+      <div class="tag"><span class="badge badge-teal">Çok Biçimlilik</span></div>
+      <h4 style="color:var(--teal)">Polymorphism</h4>
+      <p><strong>poly</strong>=çok, <strong>morph</strong>=biçim. Türetilen sınıfın, kalıtımla gelen metot/özellikleri kendi ihtiyacına göre yeniden tanımlaması.</p>
+      <p style="margin-top:8px;"><strong>Örnek:</strong> Araba.hız ≠ Traktör.hız</p>
+    </div>
+    <div class="nyp-card" style="background:rgba(245,158,11,0.07);border-color:rgba(245,158,11,0.2);">
+      <div class="tag"><span class="badge badge-amber">Soyutlama</span></div>
+      <h4 style="color:var(--amber)">Abstraction</h4>
+      <p>Üst soyut sınıfta, alt sınıflara şablon olarak metotlar tanımlanır. <strong>Soyut sınıftan nesne üretilemez.</strong></p>
+      <p style="margin-top:8px;"><code>abstract class</code> → soyut sınıf</p>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3>C# ve .NET Çalışma Mekanizması</h3>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;margin:12px 0;">
+    <div style="display:flex;align-items:center;gap:0;flex-wrap:wrap;">
+      <div style="text-align:center;padding:12px 16px;background:rgba(91,141,238,0.12);border-radius:10px;border:1px solid rgba(91,141,238,0.25);">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--blue);margin-bottom:4px;">KAYNAK KOD</div>
+        <div style="font-size:11px;color:var(--text3);">.cs dosyası</div>
+      </div>
+      <div style="padding:0 10px;color:var(--text3);font-size:20px;">→</div>
+      <div style="text-align:center;padding:12px 16px;background:rgba(139,92,246,0.12);border-radius:10px;border:1px solid rgba(139,92,246,0.25);">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--purple);margin-bottom:4px;">C# DERLEYİCİ</div>
+        <div style="font-size:11px;color:var(--text3);">Dil özel</div>
+      </div>
+      <div style="padding:0 10px;color:var(--text3);font-size:20px;">→</div>
+      <div style="text-align:center;padding:12px 16px;background:rgba(20,184,166,0.12);border-radius:10px;border:1px solid rgba(20,184,166,0.25);">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--teal);margin-bottom:4px;">IL KODU</div>
+        <div style="font-size:11px;color:var(--text3);">.exe / .dll</div>
+      </div>
+      <div style="padding:0 10px;color:var(--text3);font-size:20px;">→</div>
+      <div style="text-align:center;padding:12px 16px;background:rgba(245,158,11,0.12);border-radius:10px;border:1px solid rgba(245,158,11,0.25);">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--amber);margin-bottom:4px;">JIT DERLEYİCİ</div>
+        <div style="font-size:11px;color:var(--text3);">CLR içinde</div>
+      </div>
+      <div style="padding:0 10px;color:var(--text3);font-size:20px;">→</div>
+      <div style="text-align:center;padding:12px 16px;background:rgba(34,197,94,0.12);border-radius:10px;border:1px solid rgba(34,197,94,0.25);">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--green);margin-bottom:4px;">MAKİNE KODU</div>
+        <div style="font-size:11px;color:var(--text3);">Çalışma zamanı</div>
+      </div>
+    </div>
+    <p style="margin-top:16px;font-size:13px;"><strong>CLR (Common Language Runtime):</strong> .NET'te işletim sistemi ile programlar arasındaki arabirim. Farklı işletim sistemlerinde aynı IL kodu çalıştırılabilir.<br><strong>JIT:</strong> IL kodunu o an çalışan makinenin koduna çevirir. İlk çalıştırma yavaş, sonrakiler hızlıdır (cache).</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3>Programlama Dili Değerlendirme Ölçütleri</h3>
+  <p>Yüzlerce programlama dili geliştirilmiştir. Bir dili diğerinden ayıran özellikleri ölçmek için şu ölçütler kullanılır:</p>
+  <table>
+    <tr><th>Ölçüt</th><th>Açıklama</th></tr>
+    <tr><td><strong>Verimlilik</strong> (Efficiency)</td><td>Programın hızlı ve az bellek kullanarak çalışması. Küçük kod → daha hızlı çalışma.</td></tr>
+    <tr><td><strong>Veri Türleri ve Yapıları</strong></td><td>Tam sayı, gerçek sayı, boolean, char gibi türleri; dizi, liste, ağaç gibi yapıları destekleme kapasitesi.</td></tr>
+    <tr><td><strong>Alt Programlama Yeteneği</strong> (Modularity)</td><td>Büyük problemi parçalara bölerek her parçayı ayrı fonksiyon/modülde çözebilme.</td></tr>
+    <tr><td><strong>Yapısallık</strong></td><td>Bloklar hâlinde yazım, alt programların yoğun kullanımı. Kodun okunurluğunu ve yönetimini kolaylaştırır.</td></tr>
+    <tr><td><strong>Esneklik</strong> (Flexibility)</td><td>Programcının donanıma geniş ölçüde erişebilmesi. Kısıtlama azaldıkça hata riski artar.</td></tr>
+    <tr><td><strong>Öğrenme Kolaylığı</strong> (Pedagogy)</td><td>Seviye yükseldikçe öğrenmesi kolaylaşır. C# öğrenmesi C'den çok daha kolaydır.</td></tr>
+    <tr><td><strong>Genellik</strong> (Generality)</td><td>Yalnızca belli işlemler için değil, çok çeşitli uygulamalar geliştirilebilmesi. Örn: C genel amaçlı hâle gelmiştir.</td></tr>
+    <tr><td><strong>Giriş/Çıkış Kolaylığı</strong> (I/O Facility)</td><td>Dosya erişimi ve veri tabanı işlemlerinin kolaylığı. MySQL, Oracle gibi dillerde bu özellik gelişmiştir.</td></tr>
+    <tr><td><strong>Okunabilirlik</strong> (Readability)</td><td>Kodun başkaları tarafından da kolayca anlaşılabilir yazılması. Ortak projelerde kritik öneme sahiptir.</td></tr>
+    <tr><td><strong>Taşınabilirlik</strong> (Portability)</td><td>Kaynak kodun farklı sistemlerde sorunsuz derlenip çalışabilmesi (standardizasyon). C dili bu açıdan gelişmiştir.</td></tr>
+    <tr><td><strong>Nesne Yönelimlilik</strong></td><td>Nesne yapısı üzerine kurulu dil. Kodlar milyonlarca satıra ulaştığında kontrolü kolaylaştırır. C→C++, Pascal→Delphi.</td></tr>
+  </table>
+
+  <div class="divider"></div>
+
+  <h3>Yapısal Programlama vs Nesne Yönelimli Programlama</h3>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title"><div class="dot" style="background:var(--teal)"></div>Yapısal Programlama</div>
+      <p>1900'lü yılların ortasında, GOTO komutunun karmaşıklığına çözüm olarak doğmuştur.</p>
+      <ul class="fancy">
+        <li>Hiyerarşik, mantıksal akış yapılarından oluşur</li>
+        <li>Problem → küçük alt parçalara bölünür</li>
+        <li>Aynı alt program bloğu defalarca çağrılabilir</li>
+        <li>Kod tekrarını önler, okunurluğu yüksektir</li>
+        <li><code>if</code>, döngüler ve fonksiyonlar temel yapı taşlarıdır</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title"><div class="dot" style="background:var(--purple)"></div>Nesne Yönelimli Programlama</div>
+      <p>1960'ların sonlarında, büyüyen kod tabanlarını yönetmek için geliştirilmiştir.</p>
+      <ul class="fancy">
+        <li>Gerçek dünya modellemesi yapar</li>
+        <li>Her şey bir <strong>nesnedir</strong></li>
+        <li>Nesneler birbirleriyle iletişime geçerek program çalışır</li>
+        <li>Alan Kay tarafından önerilmiştir</li>
+        <li>Java, C++, Python, C#, PHP bu yaklaşımı destekler</li>
+      </ul>
+    </div>
+  </div>
+  <div class="alert alert-info" style="margin-top:16px;">
+    <div class="alert-icon">💡</div>
+    <div style="font-size:13px;">NYP'yi destekleyen dillerin <strong>tamamına yakını</strong> yapısal programlamayı da bünyesinde barındırır. Bu iki yaklaşım birbirini dışlamaz.</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3>C# Kullanım Alanları</h3>
+  <div class="grid-2">
+    <div>
+      <ul class="fancy">
+        <li>Konsol uygulamaları geliştirme</li>
+        <li>Windows masaüstü uygulamaları</li>
+        <li>Linux ve macOS uygulamaları</li>
+        <li>Web servis desteği</li>
+      </ul>
+    </div>
+    <div>
+      <ul class="fancy">
+        <li>PDA, Android, iOS mobil uygulamalar</li>
+        <li>Veri analizleri</li>
+        <li>ASP.NET web uygulamaları</li>
+        <li>DLL hazırlama</li>
+      </ul>
+    </div>
+  </div>
+  <div class="alert alert-warn" style="margin-top:12px;">
+    <div class="alert-icon">⚠️</div>
+    <div style="font-size:13px;"><strong>C# tercih edilme sebepleri:</strong> Yüksek verimlilik · Kolay öğrenilebilirlik · NYP'ye tam destek · Windows Form desteği · Internet teknolojilerine uyum · <strong>NOT:</strong> C#, yorumlanabilir değil — <u>derlenebilir</u> bir dildir!</div>
+  </div>
+
+  <div class="warn-box">
+    <div class="warn-box-title">⚠️ Sınav Tuzakları — Bölüm 2</div>
+    <ul>
+      <li><strong>Esneklik</strong> NYP'nin 4 temel özelliğinden DEĞİLDİR → Programlama dili <em>ölçütü</em>dür</li>
+      <li><strong>Office</strong> sistem yazılımı değil, uygulama yazılımıdır</li>
+      <li>C# kodu <strong>doğrudan</strong> makine diline derlenmez — önce IL'e, sonra JIT ile makine koduna çevrilir</li>
+      <li><strong>Yorumlayıcı</strong> = satır satır çalıştırır; <strong>Derleyici</strong> = tamamını derler sonra çalıştırır</li>
+      <li>C#, <strong>yorumlanabilir değil derlenebilir</strong> bir dildir (tercih edilmeme sebebi olamaz)</li>
+      <li>Yapısal programlamanın çıkışının iki sebebi: <strong>GOTO komutunun karmaşıklığı</strong> ve <strong>tasarım yöntemlerinin uyarlanma zorluğu</strong></li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<!-- ===================== BÖLÜM 3 ===================== -->
+<div id="b3" class="section">
+<div class="container">
+  <div class="section-header">
+    <div class="section-icon" style="background:linear-gradient(135deg,#0d9488,#14b8a6);">🔤</div>
+    <div>
+      <h2>Temel Kavramlar</h2>
+      <span>Değişkenler · Veri Türleri · Operatörler · Akış Kontrol · Diziler</span>
+    </div>
+  </div>
+
+  <h3>İsimlendirme Stilleri</h3>
+  <table>
+    <tr><th>Stil</th><th>Kullanım Yeri</th><th>Örnek</th></tr>
+    <tr><td><span class="badge badge-blue">camelCase</span></td><td>Metot parametreleri, yerel değişkenler</td><td><code>başarısızGirişSayısı</code></td></tr>
+    <tr><td><span class="badge badge-purple">PascalCase</span></td><td>Sınıf, struct, metot isimleri</td><td><code>BaşarısızGirişSayısı</code></td></tr>
+    <tr><td><span class="badge badge-teal">snake_case</span></td><td>Veri tabanı alan adları</td><td><code>başarısız_giriş_sayısı</code></td></tr>
+    <tr><td><span class="badge badge-amber">SNAKE_CASE</span></td><td>Sabitler (<code>const</code>)</td><td><code>BAŞARISIZ_GİRİŞ_SAYISI</code></td></tr>
+    <tr><td><span class="badge badge-coral">kebab-case</span></td><td>URL'ler</td><td><code>başarısız-giriş-sayısı</code></td></tr>
+  </table>
+
+  <div class="grid-2" style="margin-top:20px;">
+    <div>
+      <h3>Değişken Kuralları</h3>
+      <pre><span class="cm">// Doğru tanımlamalar:</span>
+<span class="type">int</span> sayac = <span class="num">100</span>;
+<span class="type">float</span> katsayi = <span class="num">0.79f</span>;
+<span class="type">string</span> ad = <span class="str">"Ahmet"</span>;
+<span class="type">bool</span> aktif = <span class="kw">true</span>;
+
+<span class="cm">// Büyük-küçük harf DUYARLI:</span>
+<span class="type">int</span> ogrenci = <span class="num">10</span>;   <span class="cm">// farklı</span>
+<span class="type">int</span> Ogrenci = <span class="num">11</span>;   <span class="cm">// farklı</span>
+
+<span class="cm">// Hatalı:</span>
+<span class="type">int</span> <span class="num">3</span>sinif = <span class="num">20</span>; <span class="cm">// rakamla başlayamaz</span></pre>
+    </div>
+    <div>
+      <h3>Sabit ve Enum</h3>
+      <pre><span class="cm">// Sabit: değeri asla değişmez</span>
+<span class="kw">const</span> <span class="type">double</span> pi = <span class="num">3.14</span>;
+
+<span class="cm">// Enum: sabit değerler koleksiyonu</span>
+<span class="cm">// İlk eleman 0'dan başlar!</span>
+<span class="kw">enum</span> <span class="type">Mevsimler</span> {
+  Ilkbahar,  <span class="cm">// = 0</span>
+  Yaz,       <span class="cm">// = 1</span>
+  Sonbahar,  <span class="cm">// = 2</span>
+  Kis        <span class="cm">// = 3</span>
+};
+<span class="cm">// (int)Mevsimler.Yaz → 1</span></pre>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3>Veri Türleri</h3>
+  <div class="grid-2">
+    <div>
+      <p style="font-size:13px;color:var(--teal);font-weight:700;margin-bottom:8px;">🟢 Değer Türleri (Stack'te tutulur)</p>
+      <table>
+        <tr><th>Tür</th><th>Boyut</th><th>Aralık</th></tr>
+        <tr><td><code>byte</code></td><td>1 Byte</td><td>0 — 255</td></tr>
+        <tr><td><code>sbyte</code></td><td>1 Byte</td><td>-128 — 127</td></tr>
+        <tr><td><code>short</code></td><td>2 Byte</td><td>-32,768 — 32,767</td></tr>
+        <tr><td><code>ushort</code></td><td>2 Byte</td><td>0 — 65,535</td></tr>
+        <tr><td><code>int</code></td><td>4 Byte</td><td>≈ -2.1B — 2.1B</td></tr>
+        <tr><td><code>uint</code></td><td>4 Byte</td><td>0 — 4,294,967,295</td></tr>
+        <tr><td><code>long</code></td><td>8 Byte</td><td>-2⁶³ — +2⁶³</td></tr>
+        <tr><td><code>ulong</code></td><td>8 Byte</td><td>0 — +2⁶⁴</td></tr>
+        <tr><td><code>float</code></td><td>4 Byte</td><td>±1.5×10⁻⁴⁵ — ±3.4×10³⁸</td></tr>
+        <tr><td><code>double</code></td><td>8 Byte</td><td>±5×10⁻³²⁴ — ±1.7×10³⁰⁸</td></tr>
+        <tr><td><code>decimal</code></td><td>16 Byte</td><td>En geniş ondalıklı aralık</td></tr>
+        <tr><td><code>bool</code></td><td>1 Byte</td><td>true / false</td></tr>
+        <tr><td><code>char</code></td><td>2 Byte</td><td>Tüm Unicode karakterler</td></tr>
+      </table>
+    </div>
+    <div>
+      <p style="font-size:13px;color:var(--purple);font-weight:700;margin-bottom:8px;">🟣 Referans Türleri (Heap'te tutulur)</p>
+      <table>
+        <tr><th>Tür</th><th>Açıklama</th></tr>
+        <tr><td><code>string</code></td><td>Karakter dizisi, değişken boyutlu</td></tr>
+        <tr><td><code>object</code></td><td>Tüm türlerin temel sınıfı</td></tr>
+        <tr><td><code>class</code></td><td>Kullanıcı tanımlı sınıf</td></tr>
+        <tr><td><code>interface</code></td><td>Arayüz</td></tr>
+        <tr><td><code>array</code></td><td>Dizi</td></tr>
+      </table>
+      <div class="alert alert-info" style="margin-top:16px;">
+        <div class="alert-icon">💡</div>
+        <div style="font-size:13px;"><strong>Boxing:</strong> Değer → Referans (stack→heap, otomatik)<br><strong>Unboxing:</strong> Referans → Değer (heap→stack, tip uyuşması gerekli)</div>
+      </div>
+      <div style="margin-top:12px;">
+        <p style="font-size:13px;color:var(--amber);font-weight:700;margin-bottom:8px;">Tür Dönüşümleri</p>
+        <table>
+          <tr><th>Tür</th><th>Açıklama</th></tr>
+          <tr><td><span class="badge badge-green">Kapalı (Implicit)</span></td><td>Küçük→Büyük, otomatik, veri kaybı yok</td></tr>
+          <tr><td><span class="badge badge-coral">Açık (Explicit)</span></td><td>Büyük→Küçük, zorla, veri kaybı olabilir</td></tr>
+        </table>
+        <pre style="margin-top:8px;"><span class="cm">// Açık dönüşüm:</span>
+<span class="type">long</span> x = <span class="num">100</span>;
+<span class="type">int</span> y = (<span class="type">int</span>)x;
+<span class="type">int</span> z = <span class="fn">Convert</span>.ToInt32(x);</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3>Çoklu Atama</h3>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title"><div class="dot" style="background:var(--blue)"></div>Tek Satırda Çoklu Tanım</div>
+      <p>Aynı türde birden fazla değişken virgülle ayrılarak tek satırda tanımlanabilir.</p>
+      <pre style="font-size:12px;"><span class="cm">// Tek satırda tanım + değer atama</span>
+<span class="type">int</span> x = <span class="num">5</span>, y = <span class="num">12</span>, z;
+<span class="cm">// z'ye ilk değer atanmadı</span>
+
+<span class="cm">// Önce tanımla, sonra ata</span>
+<span class="type">int</span> a, b, c;
+a = b = c = <span class="num">7</span>;
+<span class="cm">// a=7, b=7, c=7</span></pre>
+    </div>
+    <div class="card">
+      <div class="card-title"><div class="dot" style="background:var(--amber)"></div>Dikkat Edilecekler</div>
+      <ul class="fancy">
+        <li>Çoklu atama kodun <strong>anlaşılmasını zorlaştırır</strong> — dikkatli kullanılmalı</li>
+        <li><code>int x = y = 9;</code> <strong>yazım hatasıdır</strong> — y daha önce tanımlanmamış</li>
+        <li>Atama işlemi <strong>sağdan sola</strong> yapılır: <code>a = b = c = 7</code> → önce c=7, b=7, a=7</li>
+        <li>C#'ta kullanılmadan önce değer atanmamış değişken <strong>derleyici hatası verir</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3><code>var</code> Anahtar Kelimesi</h3>
+  <div class="alert alert-info">
+    <div class="alert-icon">💡</div>
+    <div>Değişken türü tanımlarken kararsız kalınan durumlarda C# derleyicisi, tutulan değere göre <strong>otomatik olarak tip tanımlaması</strong> yapar. Tür, derleme anında belirlenir — gerçek anlamda dinamik tipleme değildir.</div>
+  </div>
+  <pre><span class="kw">var</span> a = <span class="num">543</span>;           <span class="cm">// int</span>
+<span class="kw">var</span> b = <span class="num">345.6</span>;         <span class="cm">// double</span>
+<span class="kw">var</span> c = <span class="str">'A'</span>;           <span class="cm">// char</span>
+<span class="kw">var</span> d = <span class="str">"Merhaba!"</span>;    <span class="cm">// string</span>
+<span class="kw">var</span> e = <span class="kw">true</span>;          <span class="cm">// bool</span></pre>
+
+  <div class="divider"></div>
+
+  <h3>Geçerlik Bölgesi (Scope)</h3>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title"><div class="dot" style="background:var(--blue)"></div>Yerel Değişken</div>
+      <p>Bir metot, döngü veya <code>{ }</code> bloğu içinde tanımlanan değişkenlerdir. <strong>Yalnızca tanımlandıkları blokta</strong> geçerlidir. Blok tamamlanınca bellekten silinir.</p>
+      <pre style="font-size:12px;"><span class="kw">for</span> (<span class="type">int</span> i = <span class="num">0</span>; i &lt; <span class="num">5</span>; i++) {
+  <span class="cm">// i sadece burada geçerli</span>
+}
+<span class="cm">// i burada artık yok!</span></pre>
+    </div>
+    <div class="card">
+      <div class="card-title"><div class="dot" style="background:var(--purple)"></div>Sınıf Değişkeni</div>
+      <p>Sınıf içinde, metotların dışında tanımlanan değişkenlerdir. <strong>Sınıfın tüm metotlarından</strong> erişilebilir. Nesne bellekte kaldığı sürece yaşamaya devam eder.</p>
+      <pre style="font-size:12px;"><span class="kw">class</span> <span class="type">Ornek</span> {
+  <span class="type">int</span> sinifDegiskeni = <span class="num">0</span>; <span class="cm">// sınıf değişkeni</span>
+  <span class="kw">void</span> <span class="fn">Metot1</span>() { sinifDegiskeni++; }
+  <span class="kw">void</span> <span class="fn">Metot2</span>() { sinifDegiskeni--; }
+}</pre>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3>Convert Fonksiyonları (Açık Dönüşüm)</h3>
+  <div class="grid-2">
+    <table>
+      <tr><th>Fonksiyon</th><th>Dönüştürdüğü Tür</th></tr>
+      <tr><td><code>Convert.ToBoolean()</code></td><td>bool</td></tr>
+      <tr><td><code>Convert.ToByte()</code></td><td>byte</td></tr>
+      <tr><td><code>Convert.ToChar()</code></td><td>char</td></tr>
+      <tr><td><code>Convert.ToDateTime()</code></td><td>DateTime</td></tr>
+      <tr><td><code>Convert.ToInt16()</code></td><td>short</td></tr>
+      <tr><td><code>Convert.ToInt32()</code></td><td>int</td></tr>
+      <tr><td><code>Convert.ToInt64()</code></td><td>long</td></tr>
+      <tr><td><code>Convert.ToSingle()</code></td><td>float</td></tr>
+      <tr><td><code>Convert.ToDouble()</code></td><td>double</td></tr>
+      <tr><td><code>Convert.ToDecimal()</code></td><td>decimal</td></tr>
+      <tr><td><code>Convert.ToString()</code></td><td>string</td></tr>
+    </table>
+    <div>
+      <p style="font-size:13px;color:var(--amber);font-weight:700;margin-bottom:8px;">Kapalı (Implicit) Dönüşüm Tablosu</p>
+      <table>
+        <tr><th>Tür</th><th>Dönüştürülebileceği Türler</th></tr>
+        <tr><td><code>sbyte</code></td><td>short, int, long, float, double, decimal</td></tr>
+        <tr><td><code>byte</code></td><td>short, ushort, int, uint, long, ulong, float, double, decimal</td></tr>
+        <tr><td><code>short</code></td><td>int, long, float, double, decimal</td></tr>
+        <tr><td><code>ushort</code></td><td>int, uint, long, ulong, float, double, decimal</td></tr>
+        <tr><td><code>int</code></td><td>long, float, double, decimal</td></tr>
+        <tr><td><code>uint</code></td><td>long, ulong, float, double, decimal</td></tr>
+        <tr><td><code>long</code></td><td>float, double, decimal</td></tr>
+        <tr><td><code>char</code></td><td>ushort, int, uint, long, ulong, float, double, decimal</td></tr>
+        <tr><td><code>float</code></td><td>double</td></tr>
+      </table>
+      <div class="alert alert-info" style="margin-top:12px;">
+        <div class="alert-icon">💡</div>
+        <div style="font-size:13px;"><strong>Kural:</strong> Küçük tür → Büyük türe dönüşüm otomatik (veri kaybı yok). Büyük → Küçük: açık dönüşüm zorunlu.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3>Operatörler ve Öncelik Sırası</h3>
+  <div class="grid-2">
+    <div>
+      <div class="priority-list">
+        <div class="priority-item"><span class="priority-num">1</span><span class="priority-ops">- (negatif)  ++  --</span><span class="priority-label">Tekli / Unary</span></div>
+        <div class="priority-item"><span class="priority-num">2</span><span class="priority-ops">*  /  %</span><span class="priority-label">Çarpma/Bölme</span></div>
+        <div class="priority-item"><span class="priority-num">3</span><span class="priority-ops">+  -</span><span class="priority-label">Toplama/Çıkarma</span></div>
+        <div class="priority-item"><span class="priority-num">4</span><span class="priority-ops">&gt;  &gt;=  &lt;  &lt;=</span><span class="priority-label">Karşılaştırma</span></div>
+        <div class="priority-item"><span class="priority-num">5</span><span class="priority-ops">==  !=</span><span class="priority-label">Eşitlik</span></div>
+        <div class="priority-item"><span class="priority-num">6</span><span class="priority-ops">&amp;&amp;  ||</span><span class="priority-label">Mantıksal</span></div>
+        <div class="priority-item"><span class="priority-num">7</span><span class="priority-ops">=  +=  -=  *=  /=</span><span class="priority-label">Atama</span></div>
+      </div>
+    </div>
+    <div>
+      <pre><span class="cm">// Tekli operatörler — ÖNEMLİ FARK:</span>
+<span class="type">int</span> a = <span class="num">5</span>;
+toplam = <span class="num">++</span>a; <span class="cm">// önce arttır (a=6), sonra ata (toplam=6)</span>
+toplam = a<span class="num">++</span>; <span class="cm">// önce ata (toplam=6), sonra arttır (a=7)</span>
+
+<span class="cm">// Bileşik atama:</span>
+x += <span class="num">5</span>;   <span class="cm">// x = x + 5</span>
+x -= <span class="num">3</span>;   <span class="cm">// x = x - 3</span>
+x *= <span class="num">2</span>;   <span class="cm">// x = x * 2</span>
+x /= <span class="num">4</span>;   <span class="cm">// x = x / 4</span>
+x %= <span class="num">3</span>;   <span class="cm">// x = x % 3 (kalan)</span>
+
+<span class="cm">// Mantıksal:</span>
+<span class="num">&&</span>  <span class="cm">// AND — ikisi de doğruysa</span>
+<span class="num">||</span>  <span class="cm">// OR  — biri doğruysa</span>
+<span class="num">!</span>   <span class="cm">// NOT — tersine çevirir</span></pre>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3>Akış Kontrol Yapıları</h3>
+  <div class="grid-2">
+    <div>
+      <pre><span class="cm">// if - else if - else</span>
+<span class="kw">if</span> (a > b) {
+  enBuyuk = a;
+} <span class="kw">else if</span> (b > c) {
+  enBuyuk = b;
+} <span class="kw">else</span> {
+  enBuyuk = c;
+}
+
+<span class="cm">// Ternary (tek satır):</span>
+buyuk = a > b ? a : b;
+
+<span class="cm">// switch (float/double KABUL ETMEZ)</span>
+<span class="kw">switch</span> (renk) {
+  <span class="kw">case</span> <span class="str">"kırmızı"</span>: Console.WriteLine(<span class="str">"Dur"</span>); <span class="kw">break</span>;
+  <span class="kw">case</span> <span class="str">"yeşil"</span>:  Console.WriteLine(<span class="str">"Geç"</span>); <span class="kw">break</span>;
+  <span class="kw">default</span>: Console.WriteLine(<span class="str">"Geçersiz"</span>); <span class="kw">break</span>;
+}</pre>
+    </div>
+    <div>
+      <table>
+        <tr><th>Döngü</th><th>Özellik</th></tr>
+        <tr><td><code>for</code></td><td>Sayısı belli tekrar. <code>for(int i=0; i&lt;n; i++)</code></td></tr>
+        <tr><td><code>foreach</code></td><td>Dizi/koleksiyon üzerinde. <code>in</code> anahtar kelimesi</td></tr>
+        <tr><td><code>while</code></td><td>Önce kontrol, sonra çalış. Koşul false ise hiç girmez</td></tr>
+        <tr><td><code>do-while</code></td><td>Önce çalış, sonra kontrol. <strong>En az 1 kez</strong> çalışır</td></tr>
+      </table>
+      <pre style="margin-top:10px;"><span class="cm">// do-while — en az 1 kez çalışır</span>
+<span class="type">int</span> i = <span class="num">10</span>, toplam = <span class="num">0</span>;
+<span class="kw">do</span> {
+  toplam += i;
+  i--;
+} <span class="kw">while</span>(i > <span class="num">0</span>);
+<span class="cm">// Sonuç: toplam = 55</span></pre>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3>Dizi Yapıları (Array)</h3>
+  <div class="grid-2">
+    <div>
+      <pre><span class="cm">// Tek boyutlu dizi</span>
+<span class="type">int</span>[] dizi = <span class="kw">new</span> <span class="type">int</span>[<span class="num">10</span>];         <span class="cm">// 10 elemanlı</span>
+<span class="type">int</span>[] dizi2 = { <span class="num">2</span>, <span class="num">4</span>, <span class="num">6</span>, <span class="num">8</span> };    <span class="cm">// ilk değerli</span>
+<span class="type">int</span> x = dizi2[<span class="num">2</span>];               <span class="cm">// x = 6 (indis 0'dan başlar)</span>
+
+<span class="cm">// İki boyutlu dizi (matris)</span>
+<span class="type">int</span>[,] matris = <span class="kw">new</span> <span class="type">int</span>[<span class="num">3</span>,<span class="num">4</span>];
+<span class="type">int</span>[,] m2 = { {<span class="num">1</span>,<span class="num">2</span>}, {<span class="num">3</span>,<span class="num">4</span>}, {<span class="num">5</span>,<span class="num">6</span>} };
+<span class="type">int</span> eleman = m2[<span class="num">1</span>,<span class="num">0</span>]; <span class="cm">// satır=1,sütun=0 → 3</span></pre>
+    </div>
+    <div>
+      <div class="alert alert-warn">
+        <div class="alert-icon">⚠️</div>
+        <div style="font-size:13px;">
+          <strong>Dizi indisi 0'dan başlar!</strong><br>
+          n elemanlı dizide indisler <strong>0</strong> ile <strong>n-1</strong> arasındadır.<br><br>
+          <strong>Boyut sabittir</strong> — sonradan değiştirilemez.<br>
+          Dinamik boyut için <strong>Collection</strong> sınıfı kullanılır.
+        </div>
+      </div>
+      <pre style="margin-top:10px;"><span class="cm">// foreach ile dizi gezme</span>
+<span class="type">int</span>[] sayilar = { <span class="num">3</span>, <span class="num">5</span>, <span class="num">7</span>, <span class="num">9</span> };
+<span class="type">int</span> toplam = <span class="num">0</span>;
+<span class="kw">foreach</span>(<span class="type">int</span> s <span class="kw">in</span> sayilar) {
+  toplam += s;
+}
+<span class="cm">// toplam = 24</span></pre>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3>Değer Türleri vs Referans Türleri</h3>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title"><div class="dot" style="background:var(--teal)"></div>Değer Türleri</div>
+      <p>Verinin kendisini taşırlar. Stack bellekte saklanır, hızlı erişim.</p>
+      <p><code>int · long · float · double · decimal · char · bool · byte · short · struct · enum</code></p>
+      <div class="alert alert-info" style="margin-top:10px;">
+        <div class="alert-icon">💡</div>
+        <div style="font-size:13px;">Metoda gönderilince <strong>kopyalanır</strong> — orijinal değer değişmez.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><div class="dot" style="background:var(--purple)"></div>Referans Türleri</div>
+      <p>Verinin <strong>adresini</strong> taşırlar. Heap bellekte saklanır.</p>
+      <p><code>string · object · class · interface · array · delegate · pointer</code></p>
+      <div class="alert alert-warn" style="margin-top:10px;">
+        <div class="alert-icon">⚠️</div>
+        <div style="font-size:13px;"><strong>İstisna:</strong> <code>string</code> referans türü olmasına rağmen metoda <strong>değer türü gibi kopyalanarak</strong> geçirilir.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3><code>ref</code> ve <code>out</code> Anahtar Kelimeleri</h3>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title"><div class="dot" style="background:var(--blue)"></div><code>ref</code> — Referans ile geçirme</div>
+      <p>Değer türlerini metoda referansıyla gönderir. Metodun parametreyi değiştirmesine izin verir.</p>
+      <ul class="fancy">
+        <li>Metot bildirimi ve çağrımında <strong>her ikisinde de</strong> <code>ref</code> yazılmalı</li>
+        <li>Gönderilmeden önce değişkene <strong>değer atanmış olmalı</strong></li>
+      </ul>
+      <pre style="margin-top:10px;font-size:12px;"><span class="kw">static void</span> <span class="fn">daireAlani</span>(<span class="kw">ref</span> <span class="type">double</span> d)
+{
+  d = <span class="num">3.14</span> * d * d;
+}
+<span class="cm">// Çağırma:</span>
+<span class="type">double</span> r = <span class="num">5</span>;
+<span class="fn">daireAlani</span>(<span class="kw">ref</span> r); <span class="cm">// r artık alan değerini taşır</span></pre>
+    </div>
+    <div class="card">
+      <div class="card-title"><div class="dot" style="background:var(--coral)"></div><code>out</code> — Birden fazla değer döndürme</div>
+      <p>Metodun birden fazla değer döndürmesini sağlar.</p>
+      <ul class="fancy">
+        <li>Gönderilen değişkene <strong>ilk değer atanma zorunluluğu yoktur</strong></li>
+        <li>Değer, metot içinde hesaplanıp döndürülür</li>
+      </ul>
+      <pre style="margin-top:10px;font-size:12px;"><span class="kw">static int</span> <span class="fn">Max</span>(<span class="type">int</span> x, <span class="type">int</span> y, <span class="kw">out int</span> kare)
+{
+  kare = (x > y) ? x*x : y*y;
+  <span class="kw">return</span> Math.<span class="fn">Max</span>(x, y);
+}
+<span class="cm">// Çağırma:</span>
+<span class="type">int</span> kare;
+<span class="type">int</span> max = <span class="fn">Max</span>(<span class="num">9</span>, <span class="num">2</span>, <span class="kw">out</span> kare);</pre>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3>Kod Yazım Kuralları (C# Standartları)</h3>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title"><div class="dot" style="background:var(--amber)"></div>Düzen Kuralları</div>
+      <ul class="fancy">
+        <li>Her satırda <strong>yalnız bir ifade</strong> olmalı</li>
+        <li>Her satırda <strong>yalnız bir bildirim</strong> olmalı</li>
+        <li>Girintileme için <strong>4 boşluk</strong> (1 sekme) kullanılmalı</li>
+        <li>Metotlar ve özellikler arasında <strong>en az 1 boş satır</strong></li>
+        <li>Görünürlüğü artırmak için <strong>parantez</strong> kullanılmalı</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title"><div class="dot" style="background:var(--green)"></div>Yorum Kuralları</div>
+      <ul class="fancy">
+        <li>Yorumlar kod ile <strong>aynı satırda değil</strong>, yeni satırda yazılmalı</li>
+        <li>Açıklamalar <strong>büyük harf</strong> ile başlamalı</li>
+        <li>Cümle biçiminde yazılmalı ve sonuna <strong>nokta (.) konulmalı</strong></li>
+        <li><code>//</code> ile açıklama arasında <strong>bir boşluk</strong> bırakılmalı</li>
+        <li>Tüm katılımcılar aynı <strong>yorum yönergelerine</strong> uymalı</li>
+      </ul>
+    </div>
+  </div>
+  <div class="alert alert-info" style="margin-top:12px;">
+    <div class="alert-icon">💡</div>
+    <div style="font-size:13px;"><strong>Anahtar Sözcükler (Keywords):</strong> Derleyici tarafından önceden tanımlanmış ve ayrılmış sözcüklerdir. Değişken, sınıf veya metot ismi olarak <strong>kullanılamazlar</strong>. Örnekler: <code>abstract · async · const · event · extern · new · override · partial · readonly · sealed · static · unsafe · virtual · volatile</code></div>
+  </div>
+
+  <div class="warn-box">
+    <div class="warn-box-title">⚠️ Sınav Tuzakları — Bölüm 3</div>
+    <ul>
+      <li><strong>switch</strong> ifadesi <code>float</code> ve <code>double</code> türünü KABUL ETMEZ</li>
+      <li><strong>Snake_Case</strong>'de tire değil alt çizgi kullanılır; tireli olan <strong>kebab-case</strong>'dir</li>
+      <li>Enum'da ilk değer 0: <code>Mevsimler.Yaz = 1</code>, <code>Mevsimler.Yaz + 3 = 4</code></li>
+      <li><strong>Açık dönüşüm</strong> "serbest" değil, zorla yapılır — YANLIŞ SEÇENEK: "serbest dönüşümlerdir"</li>
+      <li><strong>do-while</strong> en az 1 kez çalışır, koşul sağlanmasa bile</li>
+      <li><code>ref</code> ile gönderilen değişkene <strong>mutlaka ilk değer atanmalıdır</strong> — <code>out</code>'ta ise bu zorunluluk yoktur</li>
+      <li><code>string</code> referans türü olmasına rağmen metoda <strong>değer türü gibi</strong> kopyalanarak geçirilir</li>
+      <li>Sabitler <code>const</code> anahtar sözcüğüyle tanımlanır ve yapıları gereği <strong>zaten static</strong>tir, ayrıca <code>static</code> yazmaya gerek yoktur</li>
+      <li><code>int x = y = 9;</code> <strong>yazım hatasıdır</strong> — y daha önce tanımlanmamış olduğu için derlenmez</li>
+      <li><code>var</code> tipi ile tanımlanan değişkenin türü <strong>derleme anında</strong> belirlenir — gerçek dinamik tipleme değildir</li>
+      <li>Blok içinde tanımlı değişkene <strong>blok dışından erişilemez</strong> (geçerlik bölgesi / scope kuralı)</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<!-- ===================== BÖLÜM 4 ===================== -->
+<div id="b4" class="section">
+<div class="container">
+  <div class="section-header">
+    <div class="section-icon" style="background:linear-gradient(135deg,#d97706,#f59e0b);">🏗️</div>
+    <div>
+      <h2>C# Program Yapısı</h2>
+      <span>Metotlar · Math Sınıfı · Collection · String Sınıfı</span>
+    </div>
+  </div>
+
+  <h3>Metotlar (Methods)</h3>
+  <div class="alert alert-info">
+    <div class="alert-icon">💡</div>
+    <div>Belirli görevler için tasarlanmış kod blokları. <strong>Mutlaka</strong> bir <code>class</code> veya <code>struct</code> içinde tanımlanmalıdır. <code>Main()</code> programın tek giriş noktasıdır.</div>
+  </div>
+  <div class="grid-2">
+    <div>
+      <pre><span class="cm">// Metot şablonu:</span>
+<span class="kw">public</span> <span class="type">int</span> <span class="fn">UcgenAlani</span>(<span class="type">int</span> taban, <span class="type">int</span> y) {
+  <span class="type">int</span> alan = (taban * y) / <span class="num">2</span>;
+  <span class="kw">return</span> alan;
+}
+
+<span class="cm">// void: dönüş değeri yok</span>
+<span class="kw">static</span> <span class="type">void</span> <span class="fn">EkranaYaz</span>(<span class="type">string</span> mesaj) {
+  Console.WriteLine(mesaj);
+}
+
+<span class="cm">// Main'den çağırma (static olmalı)</span>
+<span class="kw">static</span> <span class="type">void</span> <span class="fn">Main</span>() {
+  <span class="fn">EkranaYaz</span>(<span class="str">"Merhaba!"</span>);
+}</pre>
+    </div>
+    <div>
+      <pre><span class="cm">// Özyinelemeli (Recursive) Metot</span>
+<span class="kw">static</span> <span class="type">int</span> <span class="fn">Faktoriyel</span>(<span class="type">int</span> n) {
+  <span class="kw">if</span> (n == <span class="num">0</span>) <span class="kw">return</span> <span class="num">1</span>;
+  <span class="kw">return</span> n * <span class="fn">Faktoriyel</span>(n - <span class="num">1</span>);
+}
+<span class="cm">// Faktoriyel(6) = 720</span>
+<span class="cm">// 6×5×4×3×2×1×1 = 720</span>
+
+<span class="cm">// Aşırı Yükleme (Overloading)</span>
+<span class="cm">// Aynı isim, farklı parametre türü:</span>
+<span class="type">Personel</span> <span class="fn">Getir</span>(<span class="type">int</span> id) { ... }
+<span class="type">Personel</span> <span class="fn">Getir</span>(<span class="type">string</span> isim) { ... }
+<span class="type">Personel</span> <span class="fn">Getir</span>(<span class="type">long</span> tcNo) { ... }</pre>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3>Math Sınıfı</h3>
+  <div class="alert alert-warn">
+    <div class="alert-icon">⚠️</div>
+    <div style="font-size:13px;">Tüm metotlar <strong>static</strong>'tir. Sınıf <strong>sealed</strong> (mühürlü) — kalıtım yapılamaz, nesne oluşturulamaz. Kullanım: <code>Math.MetotAdı()</code></div>
+  </div>
+  <div class="grid-2">
+    <table>
+      <tr><th>Metot</th><th>İşlev</th><th>Örnek</th></tr>
+      <tr><td><code>Math.Abs(x)</code></td><td>Mutlak değer</td><td><code>Abs(-5)</code> → 5</td></tr>
+      <tr><td><code>Math.Max(x,y)</code></td><td>Büyük sayı</td><td><code>Max(3,7)</code> → 7</td></tr>
+      <tr><td><code>Math.Min(x,y)</code></td><td>Küçük sayı</td><td><code>Min(3,7)</code> → 3</td></tr>
+      <tr><td><code>Math.Pow(x,y)</code></td><td>x üssü y</td><td><code>Pow(7,2)</code> → 49</td></tr>
+      <tr><td><code>Math.Sqrt(x)</code></td><td>Karekök</td><td><code>Sqrt(121)</code> → 11</td></tr>
+      <tr><td><code>Math.Floor(x)</code></td><td>Aşağı yuvarlama</td><td><code>Floor(4.7)</code> → 4</td></tr>
+      <tr><td><code>Math.Ceiling(x)</code></td><td>Yukarı yuvarlama</td><td><code>Ceiling(4.2)</code> → 5</td></tr>
+      <tr><td><code>Math.Round(x)</code></td><td>En yakın tam sayıya</td><td><code>Round(4.7)</code> → 5</td></tr>
+      <tr><td><code>Math.Truncate(x)</code></td><td>Ondalık kısmı sil</td><td><code>Truncate(4.9)</code> → 4</td></tr>
+      <tr><td><code>Math.Log10(x)</code></td><td>Log₁₀</td><td><code>Log10(1000)</code> → 3</td></tr>
+      <tr><td><code>Math.Log(x)</code></td><td>Doğal log (e tabanı)</td><td><code>Log(1000)</code> → ≈6.908</td></tr>
+      <tr><td><code>Math.Log(x,t)</code></td><td>t tabanında log</td><td><code>Log(1000,2)</code> → ≈9.96</td></tr>
+      <tr><td><code>Math.Exp(üs)</code></td><td>e^üs</td><td><code>Exp(5)</code> → ≈148.41</td></tr>
+      <tr><td><code>Math.Sign(x)</code></td><td>İşaret: +1, 0, -1</td><td><code>Sign(-24)</code> → -1</td></tr>
+      <tr><td><code>Math.BigMul(x,y)</code></td><td>int×int → long</td><td>Taşmayı önler</td></tr>
+      <tr><td><code>Math.DivRem(x,y,out k)</code></td><td>Bölüm + kalan</td><td><code>DivRem(76,8,out k)</code> → 9, k=4</td></tr>
+      <tr><td><code>Math.Round(x,n)</code></td><td>n basamağa yuvarlama</td><td><code>Round(4.745,2)</code> → 4.75</td></tr>
+      <tr><td><code>Math.Sin/Cos/Tan</code></td><td>Trigonometrik</td><td>Açı <strong>radyan</strong> cinsinden!</td></tr>
+      <tr><td><code>Math.Asin/Acos/Atan</code></td><td>Ters trigonometrik</td><td><code>Asin(0.5)*180/PI</code> → 30°</td></tr>
+      <tr><td><code>Math.Sinh/Cosh/Tanh</code></td><td>Hiperbolik trig.</td><td>Radyan cinsinden</td></tr>
+      <tr><td><code>Math.PI</code></td><td>Pi sabiti</td><td>3.14159…</td></tr>
+      <tr><td><code>Math.E</code></td><td>Euler sabiti</td><td>2.71828…</td></tr>
+    </table>
+    <div>
+      <pre><span class="cm">// Trigonometrik — radyan!</span>
+<span class="cm">// 60° = Math.PI / 3</span>
+<span class="type">double</span> s = Math.Sin(Math.PI / <span class="num">3</span>);
+<span class="cm">// → 0.866</span>
+<span class="type">double</span> c = Math.Cos(Math.PI / <span class="num">3</span>);
+<span class="cm">// → 0.5</span>
+<span class="type">double</span> t = Math.Tan(Math.PI / <span class="num">3</span>);
+<span class="cm">// → 1.732</span>
+
+<span class="cm">// Ters trigonometrik (arcsin/arccos/arctan)</span>
+<span class="cm">// Sonuç radyan → °'ye çevirmek için *180/PI</span>
+<span class="type">double</span> a = Math.Asin(<span class="num">0.5</span>) * <span class="num">180</span> / Math.PI;
+<span class="cm">// → 30°</span>
+
+<span class="cm">// Sign: +1 / 0 / -1</span>
+Math.Sign(<span class="num">-24</span>); <span class="cm">// → -1</span>
+Math.Sign(<span class="num">0</span>);   <span class="cm">// → 0</span>
+Math.Sign(<span class="num">88</span>);  <span class="cm">// → +1</span>
+
+<span class="cm">// DivRem: bölüm + kalan</span>
+<span class="type">int</span> kalan;
+<span class="type">int</span> bolum = Math.DivRem(<span class="num">76</span>, <span class="num">8</span>, <span class="kw">out</span> kalan);
+<span class="cm">// bolum=9, kalan=4</span>
+
+<span class="cm">// BigMul: int×int → long (taşma yok)</span>
+<span class="type">long</span> z = Math.BigMul(<span class="num">432145600</span>, <span class="num">654123987</span>);
+
+<span class="cm">// E sabiti ve Exp</span>
+Math.E; <span class="cm">// 2.71828...</span>
+Math.Exp(<span class="num">5</span>); <span class="cm">// e^5 ≈ 148.41</span>
+
+<span class="cm">// Random sınıfı</span>
+<span class="type">Random</span> r = <span class="kw">new</span> <span class="type">Random</span>();
+
+<span class="cm">// [9, 26) → 9 dahil, 26 hariç</span>
+<span class="type">int</span> x = r.Next(<span class="num">9</span>, <span class="num">26</span>);
+
+<span class="cm">// [0, 66) → 0 dahil, 66 hariç</span>
+<span class="type">int</span> y = r.Next(<span class="num">66</span>);
+
+<span class="cm">// [0.0, 1.0) → double</span>
+<span class="type">double</span> d = r.NextDouble();</pre>
+      <div class="alert alert-info" style="margin-top:12px;">
+        <div class="alert-icon">💡</div>
+        <div style="font-size:13px;"><strong>Round vs Truncate vs Floor</strong><br>
+        <code>Round(4.7)</code> → 5 (en yakına)<br>
+        <code>Truncate(4.7)</code> → 4 (ondalık siler)<br>
+        <code>Floor(-4.7)</code> → -5 (aşağı)<br>
+        <code>Ceiling(-4.7)</code> → -4 (yukarı)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3>Collection Sınıfı</h3>
+  <p>Dizilerden farklı olarak <strong>dinamik boyutlu.</strong> Eleman eklenip çıkarılabilir. <code>System.Collections</code> altında.</p>
+  <div class="grid-2">
+    <div class="coll-card">
+      <div class="type-badge"><span class="badge badge-blue">ArrayList</span></div>
+      <h4>Genel Amaçlı Liste</h4>
+      <p>0'dan başlayan indis ile erişim. Farklı türde eleman tutabilir (<code>object</code>).</p>
+      <p><code>Add()</code> ekle / <code>RemoveAt(i)</code> çıkar</p>
+      <div class="coll-meta">Sıra önemli, indis ile erişim gerektiğinde</div>
+    </div>
+    <div class="coll-card">
+      <div class="type-badge"><span class="badge badge-purple">Hashtable</span></div>
+      <h4>Anahtar-Değer Yapısı</h4>
+      <p>İndis yerine anahtar ile erişim. Sözlük gibi çalışır.</p>
+      <p><code>sehirler["34"] = "İstanbul"</code></p>
+      <div class="coll-meta">Anahtar ile hızlı erişim gerektiğinde</div>
+    </div>
+    <div class="coll-card" style="border-color:rgba(20,184,166,0.25);">
+      <div class="type-badge"><span class="badge badge-teal">Queue — FIFO</span></div>
+      <h4>Kuyruk (İlk Giren İlk Çıkar)</h4>
+      <p>Market sırası gibi. İlk eklenen ilk alınır.</p>
+      <p><code>Enqueue()</code> ekle / <code>Dequeue()</code> çek</p>
+      <div class="coll-meta">SMS kuyruğu, onay zinciri gibi sıralı işlemler</div>
+    </div>
+    <div class="coll-card" style="border-color:rgba(245,158,11,0.25);">
+      <div class="type-badge"><span class="badge badge-amber">Stack — LIFO</span></div>
+      <h4>Yığın (Son Giren İlk Çıkar)</h4>
+      <p>Tabaklar üst üste gibi. En son eklenen ilk alınır.</p>
+      <p><code>Push()</code> ekle / <code>Pop()</code> çek</p>
+      <div class="coll-meta">Geri alma (undo), çağrı yığını gibi yapılar</div>
+    </div>
+    <div class="coll-card" style="grid-column:1/-1;border-color:rgba(34,197,94,0.25);">
+      <div class="type-badge"><span class="badge badge-green">Dictionary&lt;K,V&gt;</span></div>
+      <h4>Hashtable'ın Tipli Versiyonu</h4>
+      <p>Anahtar ve değer türleri şablon ile verilir. Güçlü tür kontrolü sağlar.</p>
+      <pre style="margin-top:8px;"><span class="kw">var</span> ogretmenler = <span class="kw">new</span> Dictionary&lt;<span class="type">int</span>,<span class="type">string</span>&gt;();
+ogretmenler.Add(<span class="num">1</span>, <span class="str">"Kamil Yurt"</span>);
+ogretmenler.Add(<span class="num">2</span>, <span class="str">"Handan Zeytin"</span>);
+<span class="cm">// Erişim:</span>
+<span class="kw">foreach</span>(<span class="type">KeyValuePair</span>&lt;<span class="type">int</span>,<span class="type">string</span>&gt; o <span class="kw">in</span> ogretmenler)
+  Console.WriteLine(o.Key + <span class="str">": "</span> + o.Value);</pre>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3>String Sınıfı</h3>
+  <div class="alert alert-info">
+    <div class="alert-icon">💡</div>
+    <div style="font-size:13px;">Referans türüdür ama değer türü gibi davranır. <code>string</code> = <code>System.String</code>. Çift tırnak içine yazılır: <code>"metin"</code></div>
+  </div>
+  <div class="method-list">
+    <div class="method-item"><span class="method-name">.Length</span><span class="method-desc">Karakter sayısını döndürür (int). <code>"Merhaba".Length</code> → 7</span></div>
+    <div class="method-item"><span class="method-name">.ToLower()</span><span class="method-desc">Tümünü küçük harfe çevirir</span></div>
+    <div class="method-item"><span class="method-name">.ToUpper()</span><span class="method-desc">Tümünü büyük harfe çevirir</span></div>
+    <div class="method-item"><span class="method-name">String.Compare(m1,m2)</span><span class="method-desc">-1 (m1 küçük), 0 (eşit), 1 (m1 büyük). 3. parametre: büyük-küçük duyarlılık (true=duyarsız)</span></div>
+    <div class="method-item"><span class="method-name">String.Concat(m1,m2...)</span><span class="method-desc">Metinleri birleştirir ve string döndürür</span></div>
+    <div class="method-item"><span class="method-name">.Contains(aranan)</span><span class="method-desc">İçeriyor mu? → bool. <strong>Büyük-küçük harf duyarlı!</strong></span></div>
+    <div class="method-item"><span class="method-name">.IndexOf(aranan)</span><span class="method-desc">İlk bulduğu konumu döndürür. Bulamazsa <strong>-1</strong> döner. Konum 0'dan başlar!</span></div>
+    <div class="method-item"><span class="method-name">.LastIndexOf(aranan)</span><span class="method-desc">Son bulduğu konumu döndürür. Bulamazsa -1 döner.</span></div>
+    <div class="method-item"><span class="method-name">.Replace(eski, yeni)</span><span class="method-desc">Metin içinde arama yapıp değiştirme</span></div>
+    <div class="method-item"><span class="method-name">.Split(karakter)</span><span class="method-desc">Belirtilen karakterde bölerek <code>string[]</code> döner. <code>"a/b/c".Split('/')</code> → ["a","b","c"]</span></div>
+    <div class="method-item"><span class="method-name">.Substring(başlangıç, adet)</span><span class="method-desc">Belirtilen konumdan adet kadar karakter alır</span></div>
+    <div class="method-item"><span class="method-name">.Insert(konum, metin)</span><span class="method-desc">Belirtilen konumdan itibaren metin araya ekler</span></div>
+    <div class="method-item"><span class="method-name">.Remove(başlangıç, adet)</span><span class="method-desc">Belirtilen konumdan adet kadar karakter siler</span></div>
+    <div class="method-item"><span class="method-name">.StartsWith()</span><span class="method-desc">Verilen değerle başlıyor mu? → bool</span></div>
+    <div class="method-item"><span class="method-name">.EndsWith()</span><span class="method-desc">Verilen değerle bitiyor mu? → bool</span></div>
+    <div class="method-item"><span class="method-name">.CopyTo(başl, charDizi, hedef, adet)</span><span class="method-desc">Belirtilen konumdan, char dizisine belirli sayıda karakter kopyalar</span></div>
+    <div class="method-item"><span class="method-name">String.IsNullOrEmpty(m)</span><span class="method-desc">Null veya boş mu? → bool</span></div>
+    <div class="method-item"><span class="method-name">String.Copy(m)</span><span class="method-desc">Metni yeni bir değişkene kopyalar: <code>string kopya = String.Copy(orijinal)</code></span></div>
+    <div class="method-item"><span class="method-name">String.Format(...)</span><span class="method-desc">Biçimli metin. <code>"{0,5}"</code> → 5 karakter sağa hizalı</span></div>
+    <div class="method-item"><span class="method-name">.PadLeft(n, karakter)</span><span class="method-desc">Sol tarafa n kadar karakter doldurur</span></div>
+    <div class="method-item"><span class="method-name">.PadRight(n, karakter)</span><span class="method-desc">Sağ tarafa n kadar karakter doldurur</span></div>
+  </div>
+
+  <div class="warn-box" style="margin-top:24px;">
+    <div class="warn-box-title">⚠️ Sınav Tuzakları — Bölüm 4</div>
+    <ul>
+      <li>String sınıfında <strong>Count</strong> diye bir özellik YOKTUR → Doğrusu: <code>.Length</code></li>
+      <li>Math sınıfından <strong>kalıtım yapılamaz</strong> (sealed) ve nesne oluşturulamaz</li>
+      <li><strong>Queue</strong> → Market sırası (FIFO) / <strong>Stack</strong> → Üst üste tabaklar (LIFO)</li>
+      <li>Metot içinde mutlaka atama işlemi yapılma zorunluluğu <strong>yoktur</strong></li>
+      <li><code>Math.Pow(7,2)</code> = 7² = 49 (7 üssü 2, 2 üssü 7 değil)</li>
+      <li><code>IndexOf</code> → bulamazsa <strong>-1</strong> döner, konum 0'dan başlar</li>
+      <li><code>Math.Sign(x)</code>: pozitif → +1, sıfır → 0, negatif → -1 (üç olası dönüş değeri)</li>
+      <li><code>Math.DivRem(x,y,out k)</code>: hem bölüm sonucunu döndürür hem de kalanı <code>out</code> ile verir</li>
+      <li><code>Math.BigMul</code> parametre olarak <strong>int</strong> alır, <strong>long</strong> döndürür — büyük çarpımlarda taşmayı önler</li>
+      <li><code>Math.E</code> = 2.71828… (Euler sabiti), <code>Math.Exp(n)</code> = e^n</li>
+      <li>Ters trigonometrik (<code>Asin, Acos, Atan</code>) sonuçlar <strong>radyan</strong> cinsinden gelir → dereceye çevirmek için <code>×180/Math.PI</code></li>
+      <li><code>Math.Abs(x)</code> → <code>uint, ulong, ushort</code> türlerini <strong>kabul etmez</strong> (zaten pozitif oldukları için)</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+
+<!-- ===================== ANALİZ ===================== -->
+<div id="analiz" class="section">
+<div class="container">
+  <div class="section-header">
+    <div class="section-icon" style="background:linear-gradient(135deg,#f59e0b,#ef4444);">📊</div>
+    <div>
+      <h2>Sınav Analizi — Çıkmış Sorular</h2>
+      <span>3 yıl (2021-22 · 2023-24 · 2024-25) Bahar Dönemi Ara Sınavları</span>
+    </div>
+  </div>
+
+  <div class="grid-3" style="margin-bottom:32px;">
+    <div class="card" style="border-color:rgba(239,68,68,0.4);background:linear-gradient(135deg,rgba(239,68,68,0.08),var(--card));">
+      <div style="font-size:36px;margin-bottom:8px;">🔥</div>
+      <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:#f87171;">ÇOK ÇIKAN</div>
+      <div style="font-size:13px;color:var(--text2);margin-top:6px;">NYP/OOP kavramları, Yazılım Geliştirme Süreci, Akış Diyagramı, Math Sınıfı, Değişkenler</div>
+    </div>
+    <div class="card" style="border-color:rgba(245,158,11,0.4);background:linear-gradient(135deg,rgba(245,158,11,0.08),var(--card));">
+      <div style="font-size:36px;margin-bottom:8px;">⚡</div>
+      <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:#fbbf24;">ORTA SIKLIK</div>
+      <div style="font-size:13px;color:var(--text2);margin-top:6px;">Sözde Kod, Döngüler, String Sınıfı, Boxing/Unboxing, Collection, Derleme</div>
+    </div>
+    <div class="card" style="border-color:rgba(34,197,94,0.4);background:linear-gradient(135deg,rgba(34,197,94,0.08),var(--card));">
+      <div style="font-size:36px;margin-bottom:8px;">💤</div>
+      <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:#4ade80;">AZ ÇIKAN</div>
+      <div style="font-size:13px;color:var(--text2);margin-top:6px;">Özyinelemeli metotlar, ref/out, Scope, Programlama dili karşılaştırmaları</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:28px;">
+    <div class="card-title" style="font-size:17px;margin-bottom:24px;"><div class="dot" style="background:var(--amber)"></div>Konu Bazlı Frekans Analizi <span style="font-size:12px;color:var(--text3);font-weight:400;margin-left:8px;">(3 yıl toplam)</span></div>
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <style>.bar-row{display:flex;align-items:center;gap:12px;}.bar-label{width:260px;font-size:13px;color:var(--text2);flex-shrink:0;}.bar-track{flex:1;background:var(--bg3);border-radius:100px;height:10px;overflow:hidden;}.bar-fill{height:100%;border-radius:100px;}.bar-count{width:32px;text-align:right;font-family:"JetBrains Mono",monospace;font-size:13px;font-weight:700;flex-shrink:0;}</style>
+
+      <div class="bar-row"><div class="bar-label">🏆 NYP / OOP Kavramları</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:linear-gradient(90deg,#ef4444,#f97316);"></div></div><div class="bar-count" style="color:#f87171;">9</div></div>
+      <div class="bar-row"><div class="bar-label">🏆 Yazılım Geliştirme Süreci</div><div class="bar-track"><div class="bar-fill" style="width:89%;background:linear-gradient(90deg,#ef4444,#f97316);"></div></div><div class="bar-count" style="color:#f87171;">8</div></div>
+      <div class="bar-row"><div class="bar-label">🏆 Akış Diyagramı</div><div class="bar-track"><div class="bar-fill" style="width:78%;background:linear-gradient(90deg,#f97316,#f59e0b);"></div></div><div class="bar-count" style="color:#fb923c;">7</div></div>
+      <div class="bar-row"><div class="bar-label">🏆 Değişkenler ve Atama</div><div class="bar-track"><div class="bar-fill" style="width:78%;background:linear-gradient(90deg,#f97316,#f59e0b);"></div></div><div class="bar-count" style="color:#fb923c;">7</div></div>
+      <div class="bar-row"><div class="bar-label">⚡ Math Sınıfı</div><div class="bar-track"><div class="bar-fill" style="width:67%;background:linear-gradient(90deg,#f59e0b,#eab308);"></div></div><div class="bar-count" style="color:#fbbf24;">6</div></div>
+      <div class="bar-row"><div class="bar-label">⚡ Sözde Kod</div><div class="bar-track"><div class="bar-fill" style="width:56%;background:linear-gradient(90deg,#eab308,#84cc16);"></div></div><div class="bar-count" style="color:#fbbf24;">5</div></div>
+      <div class="bar-row"><div class="bar-label">⚡ Döngüler (for/while/do-while)</div><div class="bar-track"><div class="bar-fill" style="width:56%;background:linear-gradient(90deg,#eab308,#84cc16);"></div></div><div class="bar-count" style="color:#fbbf24;">5</div></div>
+      <div class="bar-row"><div class="bar-label">⚡ String Sınıfı</div><div class="bar-track"><div class="bar-fill" style="width:56%;background:linear-gradient(90deg,#eab308,#84cc16);"></div></div><div class="bar-count" style="color:#fbbf24;">5</div></div>
+      <div class="bar-row"><div class="bar-label">⚡ Program / Yazılım Türleri</div><div class="bar-track"><div class="bar-fill" style="width:45%;background:linear-gradient(90deg,#22c55e,#14b8a6);"></div></div><div class="bar-count" style="color:#4ade80;">4</div></div>
+      <div class="bar-row"><div class="bar-label">⚡ Collection / Stack / Queue</div><div class="bar-track"><div class="bar-fill" style="width:45%;background:linear-gradient(90deg,#22c55e,#14b8a6);"></div></div><div class="bar-count" style="color:#4ade80;">4</div></div>
+      <div class="bar-row"><div class="bar-label">⚡ Boxing / Unboxing</div><div class="bar-track"><div class="bar-fill" style="width:34%;background:linear-gradient(90deg,#14b8a6,#5b8dee);"></div></div><div class="bar-count" style="color:#4ade80;">3</div></div>
+      <div class="bar-row"><div class="bar-label">⚡ Main Metodu / Metotlar</div><div class="bar-track"><div class="bar-fill" style="width:34%;background:linear-gradient(90deg,#14b8a6,#5b8dee);"></div></div><div class="bar-count" style="color:#4ade80;">3</div></div>
+      <div class="bar-row"><div class="bar-label">⚡ Derleme / IL Kodu / CLR</div><div class="bar-track"><div class="bar-fill" style="width:34%;background:linear-gradient(90deg,#14b8a6,#5b8dee);"></div></div><div class="bar-count" style="color:#4ade80;">3</div></div>
+      <div class="bar-row"><div class="bar-label">⚡ İsimlendirme Stilleri</div><div class="bar-track"><div class="bar-fill" style="width:34%;background:linear-gradient(90deg,#14b8a6,#5b8dee);"></div></div><div class="bar-count" style="color:#4ade80;">3</div></div>
+      <div class="bar-row"><div class="bar-label">💤 Özyinelemeli Metotlar</div><div class="bar-track"><div class="bar-fill" style="width:22%;background:linear-gradient(90deg,#5b8dee,#8b5cf6);"></div></div><div class="bar-count" style="color:#93c5fd;">2</div></div>
+      <div class="bar-row"><div class="bar-label">💤 Enum / Sabitler</div><div class="bar-track"><div class="bar-fill" style="width:22%;background:linear-gradient(90deg,#5b8dee,#8b5cf6);"></div></div><div class="bar-count" style="color:#93c5fd;">2</div></div>
+      <div class="bar-row"><div class="bar-label">💤 ref / out anahtar kelimeleri</div><div class="bar-track"><div class="bar-fill" style="width:22%;background:linear-gradient(90deg,#5b8dee,#8b5cf6);"></div></div><div class="bar-count" style="color:#93c5fd;">2</div></div>
+      <div class="bar-row"><div class="bar-label">💤 Web / Platform Dilleri</div><div class="bar-track"><div class="bar-fill" style="width:11%;background:linear-gradient(90deg,#8b5cf6,#ec4899);"></div></div><div class="bar-count" style="color:#c4b5fd;">1</div></div>
+      <div class="bar-row"><div class="bar-label">💤 Method Overloading</div><div class="bar-track"><div class="bar-fill" style="width:11%;background:linear-gradient(90deg,#8b5cf6,#ec4899);"></div></div><div class="bar-count" style="color:#c4b5fd;">1</div></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:28px;">
+    <div class="card-title" style="font-size:17px;margin-bottom:20px;"><div class="dot" style="background:var(--purple)"></div>Yıl Bazlı Konu Dağılımı</div>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead><tr><th>Konu</th><th style="text-align:center;">2021-22</th><th style="text-align:center;">2023-24</th><th style="text-align:center;">2024-25</th><th style="text-align:center;">Toplam</th></tr></thead>
+        <tbody>
+          <tr><td>NYP / OOP (4 temel kavram)</td><td style="text-align:center;">✅✅✅</td><td style="text-align:center;">✅✅</td><td style="text-align:center;">✅✅✅✅</td><td style="text-align:center;font-weight:700;color:#f87171;">9</td></tr>
+          <tr><td>Yazılım Geliştirme Süreci</td><td style="text-align:center;">✅✅</td><td style="text-align:center;">✅✅✅</td><td style="text-align:center;">✅✅✅</td><td style="text-align:center;font-weight:700;color:#f87171;">8</td></tr>
+          <tr><td>Akış Diyagramı (türleri, şekilleri)</td><td style="text-align:center;">✅✅✅</td><td style="text-align:center;">✅✅</td><td style="text-align:center;">✅✅</td><td style="text-align:center;font-weight:700;color:#fb923c;">7</td></tr>
+          <tr><td>Değişkenler, Atama, Hatalı Atama</td><td style="text-align:center;">✅✅</td><td style="text-align:center;">✅✅</td><td style="text-align:center;">✅✅✅</td><td style="text-align:center;font-weight:700;color:#fb923c;">7</td></tr>
+          <tr><td>Math Sınıfı Metotları</td><td style="text-align:center;">✅✅</td><td style="text-align:center;">✅✅</td><td style="text-align:center;">✅✅</td><td style="text-align:center;font-weight:700;color:#fbbf24;">6</td></tr>
+          <tr><td>Sözde Kod komutları</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅✅</td><td style="text-align:center;">✅✅</td><td style="text-align:center;font-weight:700;color:#fbbf24;">5</td></tr>
+          <tr><td>Döngüler (for, while, do-while)</td><td style="text-align:center;">✅✅</td><td style="text-align:center;">—</td><td style="text-align:center;">✅✅✅</td><td style="text-align:center;font-weight:700;color:#fbbf24;">5</td></tr>
+          <tr><td>String Sınıfı</td><td style="text-align:center;">✅✅</td><td style="text-align:center;">—</td><td style="text-align:center;">✅✅✅</td><td style="text-align:center;font-weight:700;color:#fbbf24;">5</td></tr>
+          <tr><td>Yazılım / Program Türleri</td><td style="text-align:center;">✅✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;font-weight:700;color:#4ade80;">4</td></tr>
+          <tr><td>Collection / Stack / Queue / Dict</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅✅</td><td style="text-align:center;">✅</td><td style="text-align:center;font-weight:700;color:#4ade80;">4</td></tr>
+          <tr><td>Boxing / Unboxing</td><td style="text-align:center;">✅✅</td><td style="text-align:center;">—</td><td style="text-align:center;">✅</td><td style="text-align:center;font-weight:700;color:#93c5fd;">3</td></tr>
+          <tr><td>Main Metodu / Metot Yapısı</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;font-weight:700;color:#93c5fd;">3</td></tr>
+          <tr><td>Derleme / IL Kodu / CLR</td><td style="text-align:center;">—</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅✅</td><td style="text-align:center;font-weight:700;color:#93c5fd;">3</td></tr>
+          <tr><td>İsimlendirme Stilleri</td><td style="text-align:center;">—</td><td style="text-align:center;">—</td><td style="text-align:center;">✅✅✅</td><td style="text-align:center;font-weight:700;color:#93c5fd;">3</td></tr>
+          <tr><td>Özyinelemeli Metotlar</td><td style="text-align:center;">—</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;font-weight:700;color:#c4b5fd;">2</td></tr>
+          <tr><td>Enum / Sabitler</td><td style="text-align:center;">—</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;font-weight:700;color:#c4b5fd;">2</td></tr>
+          <tr><td>ref / out anahtar kelimeleri</td><td style="text-align:center;">—</td><td style="text-align:center;">—</td><td style="text-align:center;">✅✅</td><td style="text-align:center;font-weight:700;color:#c4b5fd;">2</td></tr>
+          <tr><td>Platform/Web Dilleri (ASP, Fortran…)</td><td style="text-align:center;">—</td><td style="text-align:center;">✅</td><td style="text-align:center;">—</td><td style="text-align:center;font-weight:700;color:#c4b5fd;">1</td></tr>
+          <tr><td>Method Overloading</td><td style="text-align:center;">—</td><td style="text-align:center;">—</td><td style="text-align:center;">✅</td><td style="text-align:center;font-weight:700;color:#c4b5fd;">1</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card" style="border-color:rgba(239,68,68,0.3);">
+      <div class="card-title"><div class="dot" style="background:#ef4444"></div>🎯 Kesinlikle Çalış — Her yıl çıkıyor</div>
+      <ul style="font-size:14px;color:var(--text2);line-height:2.2;padding-left:18px;">
+        <li><strong style="color:var(--text);">NYP 4 kavramı</strong> → Encapsulation, Inheritance, Polymorphism, Abstraction tanımları</li>
+        <li><strong style="color:var(--text);">Yazılım geliştirme aşamaları</strong> → Planlama→Analiz→Tasarım→Kodlama→Test→Bakım</li>
+        <li><strong style="color:var(--text);">Akış diyagramı türleri</strong> → Doğrusal, Koşullu, Döngüsel; şekil anlamları</li>
+        <li><strong style="color:var(--text);">Değişken atama kuralları</strong> → Hatalı atamaları bulma sorusu</li>
+        <li><strong style="color:var(--text);">Math sınıfı metotları</strong> → Sqrt, Sign, BigMul, DivRem, Abs, Floor</li>
+      </ul>
+    </div>
+    <div class="card" style="border-color:rgba(245,158,11,0.3);">
+      <div class="card-title"><div class="dot" style="background:#f59e0b"></div>⚡ Sık Çıkan — Mutlaka Bak</div>
+      <ul style="font-size:14px;color:var(--text2);line-height:2.2;padding-left:18px;">
+        <li><strong style="color:var(--text);">Sözde kod komutları</strong> → başla, bitir, oku, yaz, eğer</li>
+        <li><strong style="color:var(--text);">Döngü komutları</strong> → for, while, do-while (<em>switch döngü değildir!</em>)</li>
+        <li><strong style="color:var(--text);">String metotları</strong> → Count, IndexOf, ToUpper, ToLower, Compare, Concat</li>
+        <li><strong style="color:var(--text);">Yazılım türleri</strong> → Sistem, Uygulama, Ticari, Beta, Anti-virüs</li>
+        <li><strong style="color:var(--text);">Collection yapıları</strong> → Stack (LIFO), Queue (FIFO), Dictionary, List</li>
+        <li><strong style="color:var(--text);">Boxing / Unboxing</strong> → stack→heap / heap→stack</li>
+      </ul>
+    </div>
+    <div class="card" style="border-color:rgba(91,141,238,0.3);">
+      <div class="card-title"><div class="dot" style="background:var(--blue)"></div>📈 2024-25'te Yeni Çıkan — Trende Giriyor</div>
+      <ul style="font-size:14px;color:var(--text2);line-height:2.2;padding-left:18px;">
+        <li><strong style="color:var(--text);">ref / out</strong> anahtar kelimeleri (2 soru birden geldi)</li>
+        <li><strong style="color:var(--text);">Method Overloading</strong> kavramı</li>
+        <li><strong style="color:var(--text);">C# derleme mekanizması</strong> (IL kodu, dll uzantısı)</li>
+        <li><strong style="color:var(--text);">Alçak / Yüksek seviyeli dil</strong> ayrımı</li>
+        <li><strong style="color:var(--text);">İsimlendirme stilleri</strong> (3 soru birden!)</li>
+        <li style="color:#fbbf24;">⚠️ Bu konular trende giriyor — tekrar çıkma ihtimali yüksek!</li>
+      </ul>
+    </div>
+    <div class="card" style="border-color:rgba(34,197,94,0.3);">
+      <div class="card-title"><div class="dot" style="background:var(--green)"></div>💡 Sınav Taktikleri — Klasik Tuzaklar</div>
+      <ul style="font-size:14px;color:var(--text2);line-height:2.2;padding-left:18px;">
+        <li><strong style="color:#fbbf24;">switch → döngü DEĞİLdir</strong>, her yıl tuzak olarak çıkıyor</li>
+        <li><strong style="color:#fbbf24;">Count → String sınıfına ait DEĞİLdir</strong>, her yıl çıkıyor</li>
+        <li><strong style="color:#fbbf24;">Stack</strong> = üst üste tabaklar (LIFO); <strong>Queue</strong> = market sırası (FIFO)</li>
+        <li><strong style="color:#fbbf24;">Boxing</strong> = değer→referans (otomatik); <strong>Unboxing</strong> = referans→değer (manuel)</li>
+        <li>Math.Sqrt(256) → <strong>x = √256</strong> şeklinde çıktı</li>
+        <li>int i=20; j=23; i+=j++ → i=43; ++i → <strong>44</strong> çıktısı</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ===================== QUIZ ===================== -->
+<div id="quiz" class="section">
+<div class="container">
+  <div class="section-header">
+    <div class="section-icon" style="background:linear-gradient(135deg,#ec4899,#f43f5e);">🎯</div>
+    <div>
+      <h2>Mini Quiz — Vize Hazırlık</h2>
+      <span>Tüm bölümlerden 24 soru · Her soruya tıklayarak cevapla</span>
+    </div>
+  </div>
+
+  <div class="score-bar">
+    <div class="score-num" id="score-display">0/24</div>
+    <div>
+      <div style="font-weight:700;color:var(--text)">Skor</div>
+      <div class="score-label">Doğru cevapladığın soru sayısı</div>
+    </div>
+  </div>
+
+  <div id="quiz-area"></div>
+</div>
+</div>
+
+<script>
+// Navigation
+function show(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// Quiz
+const questions = [
+  {
+    q: "Aşağıdakilerden hangisi algoritma hazırlarken dikkat edilmesi gereken hususlardan biri DEĞİLDİR?",
+    opts: ["Adımların net ifade edilmesi", "Tüm olası durumları içermesi", "İşlem sırasının gözetilmesi", "İçerisinde mutlaka bir kontrol mekanizması eklenmesi"],
+    ans: 3,
+    exp: "Algoritmanın içinde koşul veya döngü olmak zorunda değildir. Doğrusal (sıralı) akış türünde kontrol mekanizması yoktur."
+  },
+  {
+    q: "Yazılım geliştirme sürecinin aşamalarından hangisi YOKTUR?",
+    opts: ["Taleplerin Belirlenmesi", "Kodlama", "Bakım", "Güncelleme"],
+    ans: 3,
+    exp: "6 aşama şunlardır: Taleplerin Belirlenmesi → Planlama/Analiz → Tasarım → Kodlama → Test/Entegrasyon → Bakım. 'Güncelleme' resmi bir aşama değildir."
+  },
+  {
+    q: "Akış diyagramı türlerinden hangisi YANLIŞ verilmiştir?",
+    opts: ["Doğrusal", "Koşullu/Mantıksal", "Döngüsel", "Şekilsel"],
+    ans: 3,
+    exp: "Akış diyagramı türleri: Doğrusal, Mantıksal (Koşullu) ve Döngüsel (Tekrarlı). 'Şekilsel' diye bir tür yoktur."
+  },
+  {
+    q: "Kodu satır satır çalıştıran, çalışmayan bloktaki hatayı göremeyen yapıya ne denir?",
+    opts: ["Derleyici", "Yorumlayıcı", "Editör", "Hata Ayıklayıcı"],
+    ans: 1,
+    exp: "Yorumlayıcı kodu satır satır veya blok blok çalıştırır. Çalıştırılmayan bir bloktaki hata hiç görülmeyebilir."
+  },
+  {
+    q: "Nesne Yönelimli Programlamanın 4 temel özelliğinden hangisi DEĞİLDİR?",
+    opts: ["Kapsülleme (Encapsulation)", "Miras Alma (Inheritance)", "Esneklik (Flexibility)", "Soyutlama (Abstraction)"],
+    ans: 2,
+    exp: "NYP'nin 4 özelliği: Kapsülleme, Miras Alma, Çok Biçimlilik (Polymorphism) ve Soyutlama. Esneklik bir programlama dili değerlendirme ölçütüdür, NYP özelliği değildir."
+  },
+  {
+    q: "C# kodunun çalışma sırası hangisidir?",
+    opts: ["Kaynak → Makine Kodu → IL → CLR", "Kaynak → IL → JIT → Makine Kodu", "IL → Kaynak → CLR → JIT", "Kaynak → CLR → IL → Makine Kodu"],
+    ans: 1,
+    exp: "C# kodu önce C# derleyicisiyle IL (Intermediate Language) koduna derlenir. Çalıştırılınca CLR içindeki JIT derleyicisi IL'i makine koduna çevirir."
+  },
+  {
+    q: "enum Mevsimler { Ilkbahar, Yaz, Sonbahar, Kis }; → (int)Mevsimler.Yaz + 3 ifadesinin sonucu nedir?",
+    opts: ["1", "3", "4", "Yaz"],
+    ans: 2,
+    exp: "Enum'da ilk eleman 0'dan başlar: Ilkbahar=0, Yaz=1, Sonbahar=2, Kis=3. (int)Mevsimler.Yaz = 1, 1+3 = 4."
+  },
+  {
+    q: "Büyük türün küçük türe dönüştürülmesine ne denir?",
+    opts: ["Kapalı (Implicit) dönüşüm", "Açık (Explicit) dönüşüm", "Boxing", "Unboxing"],
+    ans: 1,
+    exp: "Açık (Explicit) dönüşüm: büyük tür → küçük tür, veri kaybı olabilir, zorla yapılır (cast veya Convert ile). Kapalı (Implicit): küçük → büyük, otomatik."
+  },
+  {
+    q: "int i=10; int j=i+6; i+=j++; Console.WriteLine(++i); — Ekrana ne yazar?",
+    opts: ["10", "17", "27", "26"],
+    ans: 2,
+    exp: "j = 10+6 = 16. i += j++ → i = 10+16 = 26, j=17. ++i → i = 27. Ekrana 27 yazar."
+  },
+  {
+    q: "switch deyimi hangi türde DEĞİŞKEN kabul etmez?",
+    opts: ["int", "string", "float", "char"],
+    ans: 2,
+    exp: "switch deyimi byte, short, int, long, char ve string türlerini kabul eder. float ve double türleri kabul edilmez."
+  },
+  {
+    q: "Math.Pow(7, 2) ifadesi hangi matematiksel işlemi gerçekleştirir?",
+    opts: ["7 × 2 = 14", "7² = 49", "2⁷ = 128", "√7 ≈ 2.6"],
+    ans: 1,
+    exp: "Math.Pow(taban, üs) — Pow(7,2) = 7² = 49. İlk parametre taban, ikinci parametre üs."
+  },
+  {
+    q: "Aşağıdaki koleksiyon yapılarından hangisi LIFO (Son Giren İlk Çıkar) mantığıyla çalışır?",
+    opts: ["ArrayList", "Queue", "Stack", "Dictionary"],
+    ans: 2,
+    exp: "Stack = LIFO (Last In First Out). Üst üste tabaklar gibi, son konulan ilk alınır. Push() ekle, Pop() çek. Queue ise FIFO (First In First Out)."
+  },
+  {
+    q: "String sınıfında karakter sayısını döndüren özellik hangisidir?",
+    opts: ["Count", "Size", "Length", "Capacity"],
+    ans: 2,
+    exp: "String sınıfında karakter sayısı için .Length kullanılır. Count String sınıfına ait değildir (Collection sınıflarında var)."
+  },
+  {
+    q: "string m = 'Programlama'; m.IndexOf('ma', 5) — 'ma' nın ilk geçtiği konum nedir?",
+    opts: ["-1", "3", "9", "7"],
+    ans: 2,
+    exp: "'Programlama' → P(0)r(1)o(2)g(3)r(4)a(5)m(6)a(7)l(8)a(9)m(10)a(11). 5. konumdan sonra 'ma' ilk kez 9. konumda (lama içinde). Not: Başlangıç konumu 5 verildiğinde 3. konumdaki 'ma' atlanır."
+  },
+  {
+    q: "Programlama dili değerlendirme ölçütlerinden hangisi aynı zamanda NYP'nin 4 temel özelliğiyle KARIŞTIRILMAMALDIR?",
+    opts: ["Verimlilik", "Taşınabilirlik", "Esneklik", "Okunabilirlik"],
+    ans: 2,
+    exp: "Esneklik, programlama dili değerlendirme ölçütlerinden biridir (programcının donanıma geniş erişimi). NYP'nin 4 özelliği ise Kapsülleme, Miras Alma, Çok Biçimlilik ve Soyutlama'dır. Esneklik bu dörtten değildir."
+  },
+  {
+    q: "Yapısal programlamanın ortaya çıkmasının iki temel sebebinden biri aşağıdakilerden hangisidir?",
+    opts: ["Nesne yönelimli dillerin yetersizliği", "GOTO komutunun karmaşıklığı", "C# dilinin geliştirilmesi", "Yorumlayıcıların yavaş çalışması"],
+    ans: 1,
+    exp: "Yapısal programlamanın iki sebebi: (1) GOTO komutunun kodun okunurluğunu bozması ve akışı kontrolsüz yapması, (2) Tasarım yöntemlerinin uyarlanma zorluğu."
+  },
+  {
+    q: "C# dilinde ref ve out anahtar kelimeleri hakkında hangisi DOĞRUDUR?",
+    opts: ["ref ile gönderilen değişkene ilk değer atanma zorunluluğu yoktur", "out, metodun birden fazla değer döndürmesini sağlar", "ref ve out kullanımı aynıdır", "out ile gönderilen değişkene ilk değer atanmış olması şarttır"],
+    ans: 1,
+    exp: "out anahtar kelimesi, metodun birden fazla değer döndürmesini sağlar ve gönderilen değişkene ilk değer atanma zorunluluğu YOKTUR. ref'te ise değişkene mutlaka ilk değer atanmış olmalıdır."
+  },
+  {
+    q: "string veri türü için hangisi DOĞRUDUR?",
+    opts: ["Değer türüdür, stack'te saklanır", "Referans türüdür ama metoda değer türü gibi kopyalanır", "Referans türüdür ve her zaman heap adres referansıyla geçirilir", "Boyutu sabittir"],
+    ans: 1,
+    exp: "string bir referans türüdür (heap'te saklanır), ancak C#'ta metotlara parametre olarak gönderilirken değer türü gibi kopyalanarak geçirilir. Bu string'in özel bir istisnasıdır."
+  },
+  {
+    q: "C# ile yazılan kaynak kodun çalışma sırası hangisidir?",
+    opts: ["Kaynak → Makine Kodu → CLR → IL", "Kaynak → IL → JIT → Makine Kodu", "Kaynak → CLR → JIT → IL", "Kaynak → JIT → IL → Makine Kodu"],
+    ans: 1,
+    exp: "C# kodu önce C# derleyicisiyle IL (Intermediate Language / Ara Dil) koduna derlenir (.exe/.dll). Program çalıştırıldığında CLR içindeki JIT derleyicisi IL'i makine koduna çevirir."
+  },
+  {
+    q: "Aşağıdakilerden hangisi Method Overloading hakkında doğru bir açıklama yapıyor?",
+    opts: ["Metot içinde mutlaka bir atama işlemi yapılmalıdır", "Her metot mutlaka değer döndürmelidir", "Metotlar sınıf veya struct dışında da tanımlanabilir", "Bir sınıfta aynı isimli birden fazla metot farklı parametrelerle tanımlanabilir"],
+    ans: 3,
+    exp: "Method Overloading: aynı sınıfta aynı isimli fakat farklı parametre türlerine sahip birden fazla metot tanımlanabilir. Metotlar mutlaka class veya struct içinde olmalı, void ise değer döndürmez, atama zorunlu değil."
+  },
+  {
+    q: "Math.Sign(-24) ifadesi hangi değeri döndürür?",
+    opts: ["-24", "0", "-1", "+1"],
+    ans: 2,
+    exp: "Math.Sign(x): negatif sayı için -1, sıfır için 0, pozitif sayı için +1 döndürür. -24 negatif olduğu için sonuç -1'dir."
+  },
+  {
+    q: "int a, b, c; → a = b = c = 7; işleminden sonra a, b, c değerleri nedir?",
+    opts: ["Sadece a=7, diğerleri 0", "a=7, b=0, c=0", "a=7, b=7, c=7", "Derleme hatası verir"],
+    ans: 2,
+    exp: "Çoklu atamada işlem sağdan sola yapılır: önce c=7, sonra b=7, en son a=7. Tüm değişkenlere 7 atanır."
+  },
+  {
+    q: "Bir for döngüsünde tanımlanan int i sayaç değişkeni için hangisi doğrudur?",
+    opts: ["Döngüden sonra da erişilebilir", "Tüm metot boyunca geçerlidir", "Yalnızca for bloğu içinde geçerlidir, blok bitince bellekten silinir", "Sınıf değişkeni olarak kabul edilir"],
+    ans: 2,
+    exp: "Geçerlik bölgesi (scope) kuralı: blok içinde tanımlı değişkene yerel değişken denir ve yalnızca tanımlandığı blokta geçerlidir. Blok tamamlanınca bellekteki adresi silinir."
+  },
+  {
+    q: "Math.DivRem(76, 8, out kalan) çağrısının sonucu nedir?",
+    opts: ["Bölüm=9, kalan=4", "Bölüm=8, kalan=12", "Bölüm=4, kalan=9", "Yalnızca kalanı döndürür"],
+    ans: 0,
+    exp: "Math.DivRem(bölünen, bölen, out kalan): hem bölüm sonucunu döndürür (return) hem de kalanı out parametresiyle verir. 76/8 = 9 kalan 4."
+  }
+];
+
+let score = 0;
+let answered = new Array(questions.length).fill(false);
+
+function buildQuiz() {
+  const area = document.getElementById('quiz-area');
+  area.innerHTML = questions.map((q, qi) => `
+    <div class="quiz-card" id="qcard-${qi}">
+      <div class="quiz-q">${qi+1}. ${q.q}</div>
+      <div class="quiz-opts">
+        ${q.opts.map((o, oi) => `
+          <div class="quiz-opt" id="opt-${qi}-${oi}" onclick="answer(${qi}, ${oi})">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text3);min-width:18px">${String.fromCharCode(65+oi)}</span>
+            ${o}
+          </div>
+        `).join('')}
+      </div>
+      <div class="quiz-feedback" id="fb-${qi}"></div>
+    </div>
+  `).join('');
+}
+
+function answer(qi, oi) {
+  if (answered[qi]) return;
+  answered[qi] = true;
+  const q = questions[qi];
+  const opts = document.querySelectorAll(`[id^="opt-${qi}-"]`);
+  opts.forEach(o => o.classList.add('disabled'));
+  const chosen = document.getElementById(`opt-${qi}-${oi}`);
+  const fb = document.getElementById(`fb-${qi}`);
+  if (oi === q.ans) {
+    chosen.classList.add('correct');
+    fb.className = 'quiz-feedback show ok';
+    fb.textContent = '✓ Doğru! ' + q.exp;
+    score++;
+  } else {
+    chosen.classList.add('wrong');
+    document.getElementById(`opt-${qi}-${q.ans}`).classList.add('correct');
+    fb.className = 'quiz-feedback show fail';
+    fb.textContent = '✗ Yanlış. Doğru cevap: ' + q.opts[q.ans] + '. ' + q.exp;
+  }
+  document.getElementById('score-display').textContent = score + '/' + questions.length;
+}
+
+buildQuiz();
+</script>
+
+</body>
+</html>
